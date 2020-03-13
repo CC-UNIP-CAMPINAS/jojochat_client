@@ -1,6 +1,15 @@
 package app;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
 
 import javafx.application.Application;
 import javafx.concurrent.Service;
@@ -48,7 +57,20 @@ public class Main extends Application {
                     return new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
-                            Thread.sleep(5000);
+                           /* Socket cliente = new Socket("127.0.0.1", 12345);
+                            System.out.println("O cliente se conectou ao servidor!");
+
+                            Scanner teclado = new Scanner(System.in);
+                            PrintStream saida = new PrintStream(cliente.getOutputStream(), true, "UTF-8");
+
+                            while (teclado.hasNextLine()) {
+                                saida.println(teclado.nextLine());
+                            }
+
+                            saida.close();
+                            teclado.close();
+                            cliente.close();*/
+    
                             return true;
                         }
                     };
@@ -59,11 +81,11 @@ public class Main extends Application {
                 protected void succeeded() {
                     splashStage.close(); // Fecha o splash
                     try {
-                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewCentral.fxml"));
+                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewChat.fxml"));
                         login = new Scene(fxmlLogin);
                         stageLogin.setScene(login);
                         stageLogin.show();
-                        
+
                     } catch (Exception ex) {
                     }
                 }
@@ -71,17 +93,11 @@ public class Main extends Application {
 
             splashService.start();
 
-        } catch (IOException e) {
+        } catch (
+
+        IOException e) {
             e.printStackTrace();
         }
-        /*
-         * try { Socket cliente = new Socket("localhost", 12345); ObjectInputStream
-         * entrada = new ObjectInputStream(cliente.getInputStream()); Date data_atual =
-         * (Date) entrada.readObject(); JOptionPane.showMessageDialog(null,
-         * "Data recebida do servidor:" + data_atual.toString()); entrada.close();
-         * System.out.println("Conexão encerrada"); } catch (Exception e) {
-         * e.printStackTrace(); }
-         */
 
     }
 
