@@ -45,7 +45,7 @@ public class ViewChatController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         try {
-            cliente = new Socket("127.0.0.1", 12345);
+            cliente = new Socket("localhost", 12345);
             saida = new PrintStream(cliente.getOutputStream(), true, "UTF-8");
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
