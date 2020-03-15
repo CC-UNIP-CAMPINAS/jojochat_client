@@ -5,21 +5,21 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Connection implements AutoCloseable{
-	Socket conexao = null;
+	private Socket conexaoServer = null;
 	String host;
 	
 
 	public Connection(String aHost, int aPort) throws UnknownHostException, IOException {
-			this.conexao = new Socket(aHost, aPort);
+			this.conexaoServer = new Socket(aHost, aPort);
 			this.host = aHost;
 	}
 	
 	public Socket getConnection() {
-		return conexao;
+		return conexaoServer;
 	}
 	
 	@Override
 	public void close() throws Exception {
-		conexao.close();	
+		conexaoServer.close();	
 	}
 }
