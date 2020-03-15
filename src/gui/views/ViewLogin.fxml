@@ -1,32 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="anchorCentral" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="332.0" stylesheets="@css/viewLogin.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorCentral" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="314.0" prefWidth="332.0" stylesheets="@css/viewLogin.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewLoginController">
    <children>
-      <Pane fx:id="paneCentral" layoutX="24.0" layoutY="77.0" prefHeight="260.0" prefWidth="285.0" />
-      <JFXTextField fx:id="tfLogin" focusColor="#04c582" layoutX="43.0" layoutY="162.0" prefHeight="39.0" prefWidth="247.0" promptText="Usuário" unFocusColor="WHITE">
+      <Pane fx:id="paneCentral" layoutX="24.0" layoutY="10.0" prefHeight="260.0" prefWidth="285.0" />
+      <JFXTextField fx:id="tfLogin" focusColor="#04c582" layoutX="43.0" layoutY="95.0" prefHeight="39.0" prefWidth="247.0" promptText="Usuário" unFocusColor="WHITE">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
       </JFXTextField>
-      <JFXPasswordField fx:id="pfSenha" focusColor="#04c582" layoutX="43.0" layoutY="229.0" prefHeight="39.0" prefWidth="247.0" promptText="Senha" unFocusColor="WHITE">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-      </JFXPasswordField>
-      <JFXButton fx:id="btLogin" layoutX="16.0" layoutY="325.0" prefHeight="40.0" prefWidth="299.0" text="Login" textFill="WHITE">
+      <JFXButton fx:id="btLogin" layoutX="16.0" layoutY="258.0" onAction="#fazLogin" prefHeight="40.0" prefWidth="299.0" text="Login" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </JFXButton>
-      <Circle fill="DODGERBLUE" layoutX="169.0" layoutY="78.0" radius="64.0" stroke="BLACK" strokeType="INSIDE" />
    </children>
 </AnchorPane>

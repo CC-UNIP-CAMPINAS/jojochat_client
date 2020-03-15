@@ -25,7 +25,7 @@ public class ViewCentralController implements Initializable {
 	Socket conexao;
 	
 	private static Stage stageChat = new Stage();
-	private static Scene sceneLogin;
+	private static Scene sceneChat;
 
 	static Vector<String> usuariosAtivos = new Vector<String>();
 
@@ -61,8 +61,8 @@ public class ViewCentralController implements Initializable {
 				public void run() {
 					try {
 		                Parent fxmlChat = FXMLLoader.load(getClass().getResource("/gui/views/ViewChat.fxml"));
-		                sceneLogin = new Scene(fxmlChat);
-		                stageChat.setScene(sceneLogin);
+		                sceneChat = new Scene(fxmlChat);
+		                stageChat.setScene(sceneChat);
 		                stageChat.show();
 		            } catch (Exception ex) {
 		            	ex.printStackTrace();

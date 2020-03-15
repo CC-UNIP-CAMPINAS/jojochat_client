@@ -15,7 +15,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-    public static Stage stageLogin = new Stage();
+    public static Stage primaryStage = new Stage();
     private static Scene login;
 
     @Override
@@ -74,10 +74,10 @@ public class Main extends Application {
                 protected void succeeded() {
                     splashStage.close(); // Fecha o splash
                     try {
-                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewCentral.fxml"));
+                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewLogin.fxml"));
                         login = new Scene(fxmlLogin);
-                        stageLogin.setScene(login);
-                        stageLogin.show();
+                        primaryStage.setScene(login);
+                        primaryStage.show();
                         closeRequestProgram();
 
                     } catch (Exception ex) {
@@ -102,7 +102,7 @@ public class Main extends Application {
     }
     
     public static void closeRequestProgram() {
-		stageLogin.setOnCloseRequest(new EventHandler<WindowEvent>() {
+    	primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
 				System.exit(0);
 			}
