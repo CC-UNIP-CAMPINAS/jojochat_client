@@ -5,15 +5,17 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-    private static Stage stageLogin = new Stage();
+    public static Stage stageLogin = new Stage();
     private static Scene login;
 
     @Override
@@ -76,6 +78,7 @@ public class Main extends Application {
                         login = new Scene(fxmlLogin);
                         stageLogin.setScene(login);
                         stageLogin.show();
+                        closeRequestProgram();
 
                     } catch (Exception ex) {
                     	ex.printStackTrace();
@@ -97,4 +100,12 @@ public class Main extends Application {
         launch(args);
 
     }
+    
+    public static void closeRequestProgram() {
+		stageLogin.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent we) {
+				System.exit(0);
+			}
+		});
+	}
 }

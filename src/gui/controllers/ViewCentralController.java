@@ -7,9 +7,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
+import app.Main;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
@@ -19,17 +21,16 @@ import utils.Connection;
 public class ViewCentralController implements Initializable {
 	Socket conexao;
 
-	ArrayList<String> usuariosAtivos = new ArrayList<>();
+	static Vector<String> usuariosAtivos = new Vector<String>();
 
-	//ObjectInputStream entrada = null;
+	// ObjectInputStream entrada = null;
 
-	//ObjectOutputStream saida = null;
+	// ObjectOutputStream saida = null;
 
 	@FXML
 	private TreeView<String> tvUsuariosAtivos;
 
-	@FXML
-	public void carregaTreeView() throws ClassNotFoundException, IOException {
+	public void carregaTreeView() throws ClassNotFoundException, IOException, IllegalStateException {
 		TreeItem<String> treeItemPrincipal = new TreeItem<String>("Usuários Ativos");
 		treeItemPrincipal.setExpanded(true);
 
@@ -37,8 +38,14 @@ public class ViewCentralController implements Initializable {
 			TreeItem<String> treeItemUsuario = new TreeItem<String>(usuarios);
 			treeItemPrincipal.getChildren().add(treeItemUsuario);
 		}
+		Platform.runLater(new Runnable() {
 
-		tvUsuariosAtivos.setRoot(treeItemPrincipal);
+			@Override
+			public void run() {
+				tvUsuariosAtivos.setRoot(treeItemPrincipal);
+
+			}
+		});
 	}
 
 	@Override
@@ -48,12 +55,11 @@ public class ViewCentralController implements Initializable {
 			ObjectOutputStream saida = new ObjectOutputStream(conexao.getConnection().getOutputStream());
 			ObjectInputStream entrada = new ObjectInputStream(conexao.getConnection().getInputStream());
 			System.out.println(entrada.toString());
-			ServerHandler cHandler = new ServerHandler(conexao.getConnection(), saida, entrada);
+			ServerHandler cHandler = new ServerHandler(conexao.getConnection(), entrada);
 			Thread t = new Thread(cHandler);
 			t.start();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -61,11 +67,10 @@ public class ViewCentralController implements Initializable {
 	class ServerHandler implements Runnable {
 
 		Socket cliente;
-		ObjectOutputStream saida;
 		ObjectInputStream entrada;
-		public ServerHandler(Socket cliente, ObjectOutputStream saida, ObjectInputStream entrada) {
+
+		public ServerHandler(Socket cliente, ObjectInputStream entrada) {
 			this.cliente = cliente;
-			this.saida = saida;
 			this.entrada = entrada;
 		}
 
@@ -73,18 +78,9 @@ public class ViewCentralController implements Initializable {
 		public void run() {
 			try {
 				while (true) {
-					if (!cliente.isClosed()) {
-						Object recebido = entrada.readObject();
-						System.out.println(entrada.toString());
-		
-						usuariosAtivos = (ArrayList<String>) recebido;
-						carregaTreeView();
-						System.out.println("\n-----------\n");
-						for (String string : usuariosAtivos) {
-							System.out.println(string);
-						}
-
-					}
+					Object recebido = entrada.readObject();
+					ViewCentralController.usuariosAtivos = (Vector<String>) recebido;
+					carregaTreeView();
 				}
 			}
 
@@ -94,9 +90,10 @@ public class ViewCentralController implements Initializable {
 				System.out.println("Tipo de objeto não esperado");
 			} catch (IOException ex) {
 				ex.printStackTrace();
-			} finally {
+			}
+			finally {
 				try {
-					entrada.close();
+					cliente.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
