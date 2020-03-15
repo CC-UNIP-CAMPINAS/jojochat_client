@@ -72,12 +72,13 @@ public class Main extends Application {
                 protected void succeeded() {
                     splashStage.close(); // Fecha o splash
                     try {
-                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewChat.fxml"));
+                        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("/gui/views/ViewCentral.fxml"));
                         login = new Scene(fxmlLogin);
                         stageLogin.setScene(login);
                         stageLogin.show();
 
                     } catch (Exception ex) {
+                    	ex.printStackTrace();
                     }
                 }
             };
