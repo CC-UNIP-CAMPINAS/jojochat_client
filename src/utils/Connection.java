@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 public class Connection implements AutoCloseable{
 	Socket conexao = null;
 	String host;
+	
 
 	public Connection(String aHost, int aPort) throws UnknownHostException, IOException {
 			this.conexao = new Socket(aHost, aPort);

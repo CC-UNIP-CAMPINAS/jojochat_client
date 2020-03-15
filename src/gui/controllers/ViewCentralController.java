@@ -53,7 +53,7 @@ public class ViewCentralController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
     	try {
-    		Connection conexao = new Connection("localhost", 12345);
+    		Connection conexao = new Connection("jojochatserver.hopto.org", 12345);
     		saida = new ObjectOutputStream(conexao.getConnection().getOutputStream());
 			entrada = new ObjectInputStream(conexao.getConnection().getInputStream());
 			carregaTreeView();
