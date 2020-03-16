@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import utils.Connection;
 
 public class ViewLoginController implements Initializable {
 
@@ -34,10 +35,10 @@ public class ViewLoginController implements Initializable {
 			Vector<String> login = new Vector<>();
 			login.add("login");
 			login.add(tfLogin.getText());
-			Main.saida.writeObject(login);
-			Main.saida.reset();
+			Connection.saida.writeObject(login);
+			Connection.saida.reset();
 
-			Object resposta = Main.entrada.readObject();
+			Object resposta = Connection.entrada.readObject();
 			if (resposta instanceof Boolean) {
 				Boolean permissaoDeLogin = (Boolean) resposta;
 				if (permissaoDeLogin) {
@@ -63,7 +64,6 @@ public class ViewLoginController implements Initializable {
 			sceneCentral = new Scene(fxmlCentral);
 			Main.primaryStage.setScene(sceneCentral);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -3,7 +3,6 @@ package gui.controllers;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
@@ -29,10 +28,6 @@ public class ViewCentralController implements Initializable {
 	private static Scene sceneChat;
 
 	static Vector<String> usuariosAtivos = new Vector<String>();
-
-	// ObjectInputStream entrada = null;
-
-	// ObjectOutputStream saida = null;
 
 	@FXML
 	private TreeView<String> tvUsuariosAtivos;
@@ -75,7 +70,7 @@ public class ViewCentralController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ServerHandler cHandler = new ServerHandler(Main.conexao.getConnection(), Main.entrada);
+		ServerHandler cHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(cHandler);
 		t.start();
 	}
@@ -90,6 +85,7 @@ public class ViewCentralController implements Initializable {
 			this.entrada = entrada;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			try {

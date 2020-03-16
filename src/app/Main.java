@@ -21,8 +21,7 @@ public class Main extends Application {
     public static Stage primaryStage = new Stage();
     private static Scene login;
     public static Connection conexao;
-    public static ObjectOutputStream saida;
-    public static ObjectInputStream entrada;
+    
 
     @Override
     public void start(Stage arg0) throws Exception {
@@ -56,9 +55,9 @@ public class Main extends Application {
                     return new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
-                        	conexao = new Connection("jojochatserver.hopto.org", 12345);
-                        	saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
-                			entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
+                        	conexao = new Connection("localhost", 12345);
+                        	Connection.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
+                        	Connection.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
                            /* Socket cliente = new Socket("127.0.0.1", 12345);
                             System.out.println("O cliente se conectou ao servidor!");
 
