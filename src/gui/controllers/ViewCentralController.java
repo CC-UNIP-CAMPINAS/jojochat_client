@@ -9,16 +9,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import org.controlsfx.control.Notifications;
-
 import app.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
@@ -36,6 +34,9 @@ public class ViewCentralController implements Initializable {
 
 	@FXML
 	private TreeView<String> tvUsuariosAtivos;
+	
+	@FXML
+	private Label lbUsuarioAtivo;
 
 	public void carregaTreeView() throws IOException {
 		TreeItem<String> treeItemPrincipal = new TreeItem<String>("Usuários Ativos");
@@ -83,8 +84,9 @@ public class ViewCentralController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ServerHandler cHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
-		Thread t = new Thread(cHandler);
+		lbUsuarioAtivo.setText(user);
+		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
+		Thread t = new Thread(sHandler);
 		t.start();
 	}
 
