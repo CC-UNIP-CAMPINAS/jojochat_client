@@ -55,7 +55,7 @@ public class Main extends Application {
                     return new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
-                        	conexao = new Connection("localhost", 12345);
+                        	conexao = new Connection("jojochatserver.hopto.org", 12345);
                         	Connection.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
                         	Connection.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
                            /* Socket cliente = new Socket("127.0.0.1", 12345);

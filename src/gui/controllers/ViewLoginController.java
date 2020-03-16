@@ -42,6 +42,7 @@ public class ViewLoginController implements Initializable {
 			if (resposta instanceof Boolean) {
 				Boolean permissaoDeLogin = (Boolean) resposta;
 				if (permissaoDeLogin) {
+					ViewCentralController.setUser(tfLogin.getText());
 					carregaTelaPrincipal();
 				} else {
 					System.out.println("Escolha outro usuários!");
