@@ -2,8 +2,6 @@ package gui.controllers;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,7 +44,6 @@ public class ViewLoginController implements Initializable {
 					carregaTelaPrincipal();
 				} else {
 					System.out.println("Escolha outro usuários!");
-
 				}
 			}
 
