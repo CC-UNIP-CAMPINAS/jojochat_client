@@ -1,8 +1,13 @@
 package gui.controllers;
 
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import app.Main;
 import javafx.fxml.FXML;
@@ -13,17 +18,48 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class ViewLoginController implements Initializable{
+public class ViewLoginController implements Initializable {
 
 	private static Scene sceneCentral;
-	
+
 	@FXML
 	public Button btLogin;
-	
+
 	@FXML
 	public TextField tfLogin;
-	
+
 	public void fazLogin() {
+		try {
+
+			
+
+			Vector<String> login = new Vector<>();
+			login.add("login");
+			login.add(tfLogin.getText());
+			Main.saida.writeObject(login);
+			Main.saida.reset();
+
+			Object resposta = Main.entrada.readObject();
+			if (resposta instanceof Boolean) {
+				Boolean permissaoDeLogin = (Boolean) resposta;
+				if (permissaoDeLogin) {
+					carregaTelaPrincipal();
+				} else {
+					System.out.println("Escolha outro usuários!");
+
+				}
+			}
+
+		} catch (EOFException | SocketException e) {
+			e.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void carregaTelaPrincipal() {
 		Parent fxmlCentral;
 		try {
 			fxmlCentral = FXMLLoader.load(getClass().getResource("/gui/views/ViewCentral.fxml"));
@@ -33,12 +69,10 @@ public class ViewLoginController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-       
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		
-	}   
+
+	}
 }

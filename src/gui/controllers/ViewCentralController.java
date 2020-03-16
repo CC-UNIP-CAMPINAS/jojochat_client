@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import app.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,18 +75,9 @@ public class ViewCentralController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		try {
-			Connection conexao = new Connection("jojochatserver.hopto.org", 12345);
-			ObjectOutputStream saida = new ObjectOutputStream(conexao.getConnection().getOutputStream());
-			ObjectInputStream entrada = new ObjectInputStream(conexao.getConnection().getInputStream());
-			System.out.println(entrada.toString());
-			ServerHandler cHandler = new ServerHandler(conexao.getConnection(), entrada);
-			Thread t = new Thread(cHandler);
-			t.start();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ServerHandler cHandler = new ServerHandler(Main.conexao.getConnection(), Main.entrada);
+		Thread t = new Thread(cHandler);
+		t.start();
 	}
 
 	class ServerHandler implements Runnable {
