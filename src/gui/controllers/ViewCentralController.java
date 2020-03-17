@@ -12,32 +12,65 @@ import java.util.Vector;
 import app.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
 import utils.AlertUtils;
 import utils.Connection;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
-
-	private static Stage stageChat = new Stage();
-	private static Scene sceneChat;
 	private static String user;
 
 	static Vector<String> usuariosAtivos = new Vector<String>();
 
 	@FXML
+	public TextArea taEscritura;
+	
+	@FXML
+	public Tab tabUsuario;
+
+	@FXML
+	public TextArea taMensagens;
+	
+	@FXML
+	public ListView<String> lvUsuarios;
+
+	@FXML
+	public Button btEnviar;
+	
+	@FXML
+	public Button btFecharAbaChat;
+	
+	@FXML
 	private TreeView<String> tvUsuariosAtivos;
+	
+	@FXML
+	private StackPane stpChat;
 	
 	@FXML
 	private Label lbUsuarioAtivo;
 
+	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	
+	public static String getUser() {
+		return user;
+	}
+
+	public static void setUser(String user) {
+		ViewCentralController.user = user;
+	}
+	
+	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Gets/Sets=- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+	
+	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Ações de Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	
 	public void carregaTreeView() throws IOException {
 		TreeItem<String> treeItemPrincipal = new TreeItem<String>("Usuários Ativos");
 		treeItemPrincipal.setExpanded(true);
@@ -62,10 +95,14 @@ public class ViewCentralController implements Initializable {
 				@Override
 				public void run() {
 					try {
-						Parent fxmlChat = FXMLLoader.load(getClass().getResource("/gui/views/ViewChat.fxml"));
-						sceneChat = new Scene(fxmlChat);
-						stageChat.setScene(sceneChat);
-						stageChat.show();
+						Main.primaryStage.setHeight(489);
+						Main.primaryStage.setWidth(872);
+						Main.primaryStage.centerOnScreen();
+						
+						btFecharAbaChat.setVisible(true);
+						btFecharAbaChat.setText("<");
+						
+						tabUsuario.setText(tvUsuariosAtivos.getSelectionModel().getSelectedItem().getValue());	
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -73,23 +110,31 @@ public class ViewCentralController implements Initializable {
 			});
 		}
 	}
-
-	public static String getUser() {
-		return user;
+	
+	public void fechaAbaDoChat() {
+		btFecharAbaChat.setVisible(false);
+		btFecharAbaChat.setText(">");
+		
+		Main.primaryStage.setHeight(489);
+		Main.primaryStage.setWidth(245);
+		Main.primaryStage.centerOnScreen();
 	}
+	
+	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 
-	public static void setUser(String user) {
-		ViewCentralController.user = user;
-	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lbUsuarioAtivo.setText(user);
+		
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(sHandler);
 		t.start();
 	}
 
+	
+	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	
 	class ServerHandler implements Runnable {
 
 		Socket cliente;
