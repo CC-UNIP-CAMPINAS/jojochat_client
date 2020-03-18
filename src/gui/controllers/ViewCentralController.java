@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -32,33 +33,33 @@ public class ViewCentralController implements Initializable {
 
 	@FXML
 	public TextArea taEscritura;
-	
+
 	@FXML
 	public Tab tabUsuario;
 
 	@FXML
 	public TextArea taMensagens;
-	
+
 	@FXML
 	public ListView<String> lvUsuarios;
 
 	@FXML
 	public Button btEnviar;
-	
+
 	@FXML
 	public Button btFecharAbaChat;
-	
+
 	@FXML
 	private TreeView<String> tvUsuariosAtivos;
-	
+
 	@FXML
 	private StackPane stpChat;
-	
+
 	@FXML
 	private Label lbUsuarioAtivo;
 
-	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
-	
+	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+
 	public static String getUser() {
 		return user;
 	}
@@ -66,11 +67,13 @@ public class ViewCentralController implements Initializable {
 	public static void setUser(String user) {
 		ViewCentralController.user = user;
 	}
-	
-	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Gets/Sets=- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
-	
-	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Ações de Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
-	
+
+	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Gets/Sets=-
+	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+
+	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Ações de
+	// Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+
 	public void carregaTreeView() throws IOException {
 		TreeItem<String> treeItemPrincipal = new TreeItem<String>("Usuários Ativos");
 		treeItemPrincipal.setExpanded(true);
@@ -98,11 +101,11 @@ public class ViewCentralController implements Initializable {
 						Main.primaryStage.setHeight(489);
 						Main.primaryStage.setWidth(872);
 						Main.primaryStage.centerOnScreen();
-						
+
 						btFecharAbaChat.setVisible(true);
 						btFecharAbaChat.setText("<");
-						
-						tabUsuario.setText(tvUsuariosAtivos.getSelectionModel().getSelectedItem().getValue());	
+
+						tabUsuario.setText(tvUsuariosAtivos.getSelectionModel().getSelectedItem().getValue());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -110,35 +113,58 @@ public class ViewCentralController implements Initializable {
 			});
 		}
 	}
-	
+
 	public void fechaAbaDoChat() {
 		btFecharAbaChat.setVisible(false);
 		btFecharAbaChat.setText(">");
-		
+
 		Main.primaryStage.setHeight(489);
 		Main.primaryStage.setWidth(245);
 		Main.primaryStage.centerOnScreen();
 	}
-	
-	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 
+	public void enviaMensagem() {
+		String mensagem = taMensagens.getText() + "(" + LocalDate.now() + ") - " + user + ": " + taEscritura.getText() + "\n";
+		taMensagens.setText(mensagem);
+		taEscritura.clear();
+		Vector<Object> teste = new Vector<>();
+		teste.add("mensagem");
+		teste.add(tabUsuario.getText());
+		teste.add(mensagem);
+		try {
+			Connection.saida.writeObject(teste);
+			Connection.saida.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void recebeMensagem(String mensagem) {
+		taMensagens.setText(mensagem);
+	}
+
+	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de
+	// Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lbUsuarioAtivo.setText(user);
-		
+
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(sHandler);
 		t.start();
 	}
 
-	
-	//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
-	
+	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+
 	class ServerHandler implements Runnable {
 
 		Socket cliente;
 		ObjectInputStream entrada;
+		String operacao;
+		Vector<?> request;
+		Object recebido;
+		String mensagem;
 
 		public ServerHandler(Socket cliente, ObjectInputStream entrada) {
 			this.cliente = cliente;
@@ -150,18 +176,33 @@ public class ViewCentralController implements Initializable {
 		public void run() {
 			try {
 				while (true) {
-					Object recebido = entrada.readObject();
-					if (recebido instanceof Vector<?>) {
-						for (String cliente : usuariosAtivos) {
-							if(!((Vector<String>) recebido).contains(cliente)) {
-								AlertUtils.showNotficacaoLogin(false, cliente);
+					recebido = entrada.readObject();
+					operacao = (String) recebido;
+					switch (operacao) {
+					case "broadcast":
+						recebido = entrada.readObject();
+						if (recebido instanceof Vector<?>) {
+							for (String cliente : usuariosAtivos) {
+								if (!((Vector<String>) recebido).contains(cliente)) {
+									AlertUtils.showNotficacaoLogin(false, cliente);
+								}
+							}
+							ViewCentralController.usuariosAtivos = (Vector<String>) recebido;
+							carregaTreeView();
+							if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
+								AlertUtils.showNotficacaoLogin(true,
+										ViewCentralController.usuariosAtivos.lastElement());
 							}
 						}
-						ViewCentralController.usuariosAtivos = (Vector<String>) recebido;
-						carregaTreeView();
-						if(!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
-							AlertUtils.showNotficacaoLogin(true, ViewCentralController.usuariosAtivos.lastElement());					
-						}		
+						break;
+
+					case "mensagem":
+						recebido = entrada.readObject();
+						mensagem = (String) recebido;
+						recebeMensagem(mensagem);
+						break;
+					default:
+						break;
 					}
 				}
 			}
