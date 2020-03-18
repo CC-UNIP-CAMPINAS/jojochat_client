@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -79,8 +79,10 @@ public class ViewCentralController implements Initializable {
 		treeItemPrincipal.setExpanded(true);
 
 		for (String usuarios : usuariosAtivos) {
-			TreeItem<String> treeItemUsuario = new TreeItem<String>(usuarios);
-			treeItemPrincipal.getChildren().add(treeItemUsuario);
+			if (!usuarios.equals(user)) {
+				TreeItem<String> treeItemUsuario = new TreeItem<String>(usuarios);
+				treeItemPrincipal.getChildren().add(treeItemUsuario);
+			}
 		}
 		Platform.runLater(new Runnable() {
 
@@ -100,7 +102,6 @@ public class ViewCentralController implements Initializable {
 					try {
 						Main.primaryStage.setHeight(489);
 						Main.primaryStage.setWidth(872);
-						Main.primaryStage.centerOnScreen();
 
 						btFecharAbaChat.setVisible(true);
 						btFecharAbaChat.setText("<");
@@ -124,13 +125,20 @@ public class ViewCentralController implements Initializable {
 	}
 
 	public void enviaMensagem() {
-		String mensagem = taMensagens.getText() + "(" + LocalDate.now() + ") - " + user + ": " + taEscritura.getText() + "\n";
+		int hora = LocalDateTime.now().getHour();
+		int minuto = LocalDateTime.now().getMinute();
+		String mensagem = taMensagens.getText() + "(" + hora + ":" + minuto + ") - " + user + ": "
+				+ taEscritura.getText() + "\n";
 		taMensagens.setText(mensagem);
+		taMensagens.end();
 		taEscritura.clear();
+		
 		Vector<Object> teste = new Vector<>();
 		teste.add("mensagem");
 		teste.add(tabUsuario.getText());
+		teste.add(user);
 		teste.add(mensagem);
+		
 		try {
 			Connection.saida.writeObject(teste);
 			Connection.saida.reset();
@@ -138,9 +146,17 @@ public class ViewCentralController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
-	public void recebeMensagem(String mensagem) {
+
+	public void recebeMensagem(Vector<?> requisicao) {
+		String remetente = (String) requisicao.get(2);
+		String mensagem = (String) requisicao.get(3);
+		TreeItem<String> treeItemUsuario = new TreeItem<String>(remetente);
+		for (TreeItem<String> item : tvUsuariosAtivos.getRoot().getChildren()) {
+			if(item.getValue().equals(remetente)) {
+			}
+		}
 		taMensagens.setText(mensagem);
+		taMensagens.end();
 	}
 
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de
@@ -162,7 +178,7 @@ public class ViewCentralController implements Initializable {
 		Socket cliente;
 		ObjectInputStream entrada;
 		String operacao;
-		Vector<?> request;
+		Vector<?> requisicao;
 		Object recebido;
 		String mensagem;
 
@@ -177,32 +193,34 @@ public class ViewCentralController implements Initializable {
 			try {
 				while (true) {
 					recebido = entrada.readObject();
-					operacao = (String) recebido;
-					switch (operacao) {
-					case "broadcast":
-						recebido = entrada.readObject();
-						if (recebido instanceof Vector<?>) {
+					if (recebido instanceof Vector<?>) {
+						requisicao = (Vector<?>) recebido;
+						operacao = (String) requisicao.get(0);
+						
+						switch (operacao) {
+						case "broadcast":
+
 							for (String cliente : usuariosAtivos) {
-								if (!((Vector<String>) recebido).contains(cliente)) {
+								if (!((Vector<String>) requisicao.get(1)).contains(cliente)) {
 									AlertUtils.showNotficacaoLogin(false, cliente);
 								}
 							}
-							ViewCentralController.usuariosAtivos = (Vector<String>) recebido;
+							ViewCentralController.usuariosAtivos = (Vector<String>) requisicao.get(1);
 							carregaTreeView();
 							if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
 								AlertUtils.showNotficacaoLogin(true,
 										ViewCentralController.usuariosAtivos.lastElement());
 							}
-						}
-						break;
 
-					case "mensagem":
-						recebido = entrada.readObject();
-						mensagem = (String) recebido;
-						recebeMensagem(mensagem);
-						break;
-					default:
-						break;
+							break;
+
+						case "mensagem":
+							//mensagem = (String) requisicao.get(3);
+							recebeMensagem(requisicao);
+							break;
+						default:
+							break;
+						}
 					}
 				}
 			}
