@@ -13,7 +13,9 @@ import java.util.Vector;
 import app.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -22,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import utils.AlertUtils;
 import utils.Connection;
 
@@ -41,19 +44,13 @@ public class ViewCentralController implements Initializable {
 	public TextArea taMensagens;
 
 	@FXML
-	public ListView<String> lvUsuarios;
-
-	@FXML
 	public Button btEnviar;
 
 	@FXML
 	public Button btFecharAbaChat;
 
 	@FXML
-	private TreeView<String> tvUsuariosAtivos;
-
-	@FXML
-	private StackPane stpChat;
+	private VBox vbUsuariosLogadas;
 
 	@FXML
 	private Label lbUsuarioAtivo;
@@ -75,45 +72,32 @@ public class ViewCentralController implements Initializable {
 	// Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
 
 	public void carregaTreeView() throws IOException {
-		TreeItem<String> treeItemPrincipal = new TreeItem<String>("Usuários Ativos");
-		treeItemPrincipal.setExpanded(true);
-
-		for (String usuarios : usuariosAtivos) {
-			if (!usuarios.equals(user)) {
-				TreeItem<String> treeItemUsuario = new TreeItem<String>(usuarios);
-				treeItemPrincipal.getChildren().add(treeItemUsuario);
-			}
-		}
 		Platform.runLater(new Runnable() {
-
 			@Override
 			public void run() {
-				tvUsuariosAtivos.setRoot(treeItemPrincipal);
+				vbUsuariosLogadas.getChildren().clear();
+				for (String usuarios : usuariosAtivos) {
+					if (!usuarios.equals(user)) {
+						FXMLLoader userChatLoader;
+						try {
+							userChatLoader = new FXMLLoader(getClass().getResource("/gui/views/ViewUserChat.fxml"));
+							Parent userChatParent = (Parent) userChatLoader.load();
+							ViewUserChatController controlador = userChatLoader.getController();
+							controlador.setaNomeUsuario(usuarios);
+							vbUsuariosLogadas.getChildren().add(userChatParent);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}	
+					}
+				}
 			}
 		});
 	}
 
-	public void selecionaChat() {
-		if (tvUsuariosAtivos.getSelectionModel().getSelectedItem() != null
-				&& tvUsuariosAtivos.getSelectionModel().getSelectedItem().isLeaf()) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Main.primaryStage.setHeight(489);
-						Main.primaryStage.setWidth(872);
-
-						btFecharAbaChat.setVisible(true);
-						btFecharAbaChat.setText("<");
-
-						tabUsuario.setText(tvUsuariosAtivos.getSelectionModel().getSelectedItem().getValue());
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			});
-		}
-	}
+	//public void selecionaChat() {
+		//vbUsuariosLogadas.getChildren().get(1).
+		
+	//}
 
 	public void fechaAbaDoChat() {
 		btFecharAbaChat.setVisible(false);
@@ -132,13 +116,13 @@ public class ViewCentralController implements Initializable {
 		taMensagens.setText(mensagem);
 		taMensagens.end();
 		taEscritura.clear();
-		
+
 		Vector<Object> teste = new Vector<>();
 		teste.add("mensagem");
 		teste.add(tabUsuario.getText());
 		teste.add(user);
 		teste.add(mensagem);
-		
+
 		try {
 			Connection.saida.writeObject(teste);
 			Connection.saida.reset();
@@ -151,10 +135,10 @@ public class ViewCentralController implements Initializable {
 		String remetente = (String) requisicao.get(2);
 		String mensagem = (String) requisicao.get(3);
 		TreeItem<String> treeItemUsuario = new TreeItem<String>(remetente);
-		for (TreeItem<String> item : tvUsuariosAtivos.getRoot().getChildren()) {
-			if(item.getValue().equals(remetente)) {
-			}
-		}
+//		for (TreeItem<String> item : tvUsuariosAtivos.getRoot().getChildren()) {
+//			if(item.getValue().equals(remetente)) {
+//			}
+//		}
 		taMensagens.setText(mensagem);
 		taMensagens.end();
 	}
@@ -196,7 +180,7 @@ public class ViewCentralController implements Initializable {
 					if (recebido instanceof Vector<?>) {
 						requisicao = (Vector<?>) recebido;
 						operacao = (String) requisicao.get(0);
-						
+
 						switch (operacao) {
 						case "broadcast":
 
@@ -215,7 +199,7 @@ public class ViewCentralController implements Initializable {
 							break;
 
 						case "mensagem":
-							//mensagem = (String) requisicao.get(3);
+							// mensagem = (String) requisicao.get(3);
 							recebeMensagem(requisicao);
 							break;
 						default:
