@@ -12,18 +12,17 @@ import java.util.Vector;
 
 import app.Main;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utils.AlertUtils;
 import utils.Connection;
@@ -142,6 +141,16 @@ public class ViewCentralController implements Initializable {
 		taMensagens.setText(mensagem);
 		taMensagens.end();
 	}
+	
+	public void resizeTextArea() {
+		taEscritura.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				taEscritura.setPrefHeight(newValue.length() * 7); // why 7? Totally trial number.
+			}
+		});
+	}
+		
 
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de
 	// Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
@@ -153,6 +162,8 @@ public class ViewCentralController implements Initializable {
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(sHandler);
 		t.start();
+		
+		resizeTextArea();
 	}
 
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//

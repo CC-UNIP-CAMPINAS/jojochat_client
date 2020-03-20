@@ -1,0 +1,13 @@
+#scrollPaneUser, .tab-pane, #apTab, .menu-bar {
+	-fx-border-color: #6B6B6B;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+    
+}
+
+#apCentral{
+	-fx-background-image: url("../../../model/img/blurred-background-green.jpg");
+	-fx-background-size: cover;
+	
+}
+
