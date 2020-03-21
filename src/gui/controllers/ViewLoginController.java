@@ -64,8 +64,9 @@ public class ViewLoginController implements Initializable {
 			fxmlCentral = FXMLLoader.load(getClass().getResource("/gui/views/ViewCentral.fxml"));
 			sceneCentral = new Scene(fxmlCentral);
 			Main.primaryStage.setScene(sceneCentral);
-			Main.primaryStage.setWidth(245);
-			Main.primaryStage.setHeight(489);
+			Main.primaryStage.setMaximized(true);
+			Main.primaryStage.setMinWidth(872);
+			Main.primaryStage.setMinHeight(570);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

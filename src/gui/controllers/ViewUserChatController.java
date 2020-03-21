@@ -27,7 +27,7 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void selecionado() {
-		apUserChat.setStyle("-fx-background-color: #b7b7b7");
+		apUserChat.setStyle("-fx-background-color: #a7a6a8");
 	}
 	
 	public void deSeleciona() {

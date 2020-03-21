@@ -18,11 +18,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import utils.AlertUtils;
 import utils.Connection;
@@ -34,25 +36,47 @@ public class ViewCentralController implements Initializable {
 	static Vector<String> usuariosAtivos = new Vector<String>();
 
 	@FXML
-	public TextArea taEscritura;
+    private ScrollPane scrollPaneUser;
 
-	@FXML
-	public Tab tabUsuario;
+    @FXML
+    private VBox vbUsuariosLogadas;
 
-	@FXML
-	public TextArea taMensagens;
+    @FXML
+    private AnchorPane apCentral;
 
-	@FXML
-	public Button btEnviar;
+    @FXML
+    private AnchorPane apCentralInf;
 
-	@FXML
-	public Button btFecharAbaChat;
+    @FXML
+    private ImageView btArquivo;
 
-	@FXML
-	private VBox vbUsuariosLogadas;
+    @FXML
+    private ImageView btEnviar;
 
-	@FXML
-	private Label lbUsuarioAtivo;
+    @FXML
+    private ImageView btEmoji;
+
+    @FXML
+    private TextArea taEscritura;
+
+    @FXML
+    private AnchorPane apCentralSup;
+
+    @FXML
+    private Label lbUserChamado;
+
+    @FXML
+    private ImageView imgUserChamado;
+
+    @FXML
+    private Label lbUser;
+
+    @FXML
+    private ImageView imgUser;
+
+    @FXML
+    private TextField tfPesquisa;
+
 
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
 
@@ -98,27 +122,17 @@ public class ViewCentralController implements Initializable {
 		
 	//}
 
-	public void fechaAbaDoChat() {
-		btFecharAbaChat.setVisible(false);
-		btFecharAbaChat.setText(">");
-
-		Main.primaryStage.setHeight(489);
-		Main.primaryStage.setWidth(245);
-		Main.primaryStage.centerOnScreen();
-	}
 
 	public void enviaMensagem() {
 		int hora = LocalDateTime.now().getHour();
 		int minuto = LocalDateTime.now().getMinute();
-		String mensagem = taMensagens.getText() + "(" + hora + ":" + minuto + ") - " + user + ": "
+		String mensagem =  "(" + hora + ":" + minuto + ") - " + user + ": "
 				+ taEscritura.getText() + "\n";
-		taMensagens.setText(mensagem);
-		taMensagens.end();
 		taEscritura.clear();
 
 		Vector<Object> teste = new Vector<>();
 		teste.add("mensagem");
-		teste.add(tabUsuario.getText());
+		teste.add(lbUserChamado.getText());
 		teste.add(user);
 		teste.add(mensagem);
 
@@ -138,15 +152,19 @@ public class ViewCentralController implements Initializable {
 //			if(item.getValue().equals(remetente)) {
 //			}
 //		}
-		taMensagens.setText(mensagem);
-		taMensagens.end();
 	}
 	
+	
+	
 	public void resizeTextArea() {
+		    
 		taEscritura.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				taEscritura.setPrefHeight(newValue.length() * 7); // why 7? Totally trial number.
+				
+				System.out.println(taEscritura.getText().length());
+//				Text text = (Text) taEscritura.lookup(".text");
+//				taEscritura.setPrefHeight(text.boundsInParentProperty().get().getMaxY());
 			}
 		});
 	}
@@ -157,7 +175,7 @@ public class ViewCentralController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		lbUsuarioAtivo.setText(user);
+		lbUser.setText(user);
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(sHandler);
