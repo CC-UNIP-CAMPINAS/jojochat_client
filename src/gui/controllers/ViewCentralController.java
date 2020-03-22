@@ -17,14 +17,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utils.AlertUtils;
 import utils.Connection;
@@ -69,6 +71,15 @@ public class ViewCentralController implements Initializable {
     private ImageView imgUserChamado;
 
     @FXML
+    private ScrollPane scrollPaneMensagens;
+
+    @FXML
+    private VBox vbMensagem;
+
+    @FXML
+    private AnchorPane apLeftSup;
+
+    @FXML
     private Label lbUser;
 
     @FXML
@@ -76,6 +87,7 @@ public class ViewCentralController implements Initializable {
 
     @FXML
     private TextField tfPesquisa;
+
 
 
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
@@ -126,15 +138,16 @@ public class ViewCentralController implements Initializable {
 	public void enviaMensagem() {
 		int hora = LocalDateTime.now().getHour();
 		int minuto = LocalDateTime.now().getMinute();
-		String mensagem =  "(" + hora + ":" + minuto + ") - " + user + ": "
-				+ taEscritura.getText() + "\n";
+		String horario = hora + ":" + minuto;
+		String mensagem = taEscritura.getText();
 		taEscritura.clear();
 
 		Vector<Object> teste = new Vector<>();
 		teste.add("mensagem");
-		teste.add(lbUserChamado.getText());
+		teste.add("Rodrigo");
 		teste.add(user);
 		teste.add(mensagem);
+		teste.add(horario);
 
 		try {
 			Connection.saida.writeObject(teste);
@@ -147,11 +160,34 @@ public class ViewCentralController implements Initializable {
 	public void recebeMensagem(Vector<?> requisicao) {
 		String remetente = (String) requisicao.get(2);
 		String mensagem = (String) requisicao.get(3);
-		TreeItem<String> treeItemUsuario = new TreeItem<String>(remetente);
-//		for (TreeItem<String> item : tvUsuariosAtivos.getRoot().getChildren()) {
-//			if(item.getValue().equals(remetente)) {
-//			}
-//		}
+		String horario = (String) requisicao.get(4);
+		
+		
+		FXMLLoader balaoDestinatario;
+		try {
+			balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
+			Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
+			ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
+			controlador.setaMensagem(mensagem, horario);
+			
+			HBox hboxMensagem = new HBox();
+			hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+			HBox.setMargin(hboxMensagem, new Insets(0, 0, 0, 200));
+			hboxMensagem.setAlignment(Pos.CENTER_LEFT);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					hboxMensagem.getChildren().add(parentBalaoDestinatario);	
+					vbMensagem.getChildren().add(hboxMensagem);
+				}
+			});		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
 	}
 	
 	

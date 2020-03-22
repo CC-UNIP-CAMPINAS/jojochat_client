@@ -18,7 +18,9 @@
 }
 
 #scrollPaneMensagens {
-    
+   -fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
 }
 	
 
@@ -33,7 +35,7 @@
 	-fx-border-color: #d3d3d3 transparent transparent transparent;
 }
 
-#apCentralSup{
+#apCentralSup, #apLeftSup{
 	-fx-border-color: transparent transparent #d3d3d3 transparent;
 }
 
