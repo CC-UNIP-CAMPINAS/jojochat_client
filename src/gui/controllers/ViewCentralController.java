@@ -34,6 +34,7 @@ import utils.Connection;
 public class ViewCentralController implements Initializable {
 	Socket conexao;
 	private static String user;
+	private static String userParaConversar;
 
 	static Vector<String> usuariosAtivos = new Vector<String>();
 
@@ -99,6 +100,14 @@ public class ViewCentralController implements Initializable {
 	public static void setUser(String user) {
 		ViewCentralController.user = user;
 	}
+	
+	public static String getUserParaConversar() {
+		return userParaConversar;
+	}
+
+	public static void setUserParaConversar(String userParaConversar) {
+		ViewCentralController.userParaConversar = userParaConversar;
+	}
 
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Gets/Sets=-
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
@@ -106,7 +115,11 @@ public class ViewCentralController implements Initializable {
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Ações de
 	// Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
 
-	public void carregaTreeView() throws IOException {
+	public void abreConversa() {
+		lbUserChamado.setText(ViewCentralController.userParaConversar);
+	}
+
+	public void carregaVboxUsuariosLogados() throws IOException {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -129,12 +142,6 @@ public class ViewCentralController implements Initializable {
 		});
 	}
 
-	//public void selecionaChat() {
-		//vbUsuariosLogadas.getChildren().get(1).
-		
-	//}
-
-
 	public void enviaMensagem() {
 		int hora = LocalDateTime.now().getHour();
 		int minuto = LocalDateTime.now().getMinute();
@@ -144,10 +151,17 @@ public class ViewCentralController implements Initializable {
 
 		Vector<Object> teste = new Vector<>();
 		teste.add("mensagem");
-		teste.add("Rodrigo");
+		teste.add(ViewCentralController.getUserParaConversar());
 		teste.add(user);
 		teste.add(mensagem);
 		teste.add(horario);
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 2));
+			}
+		});	
 
 		try {
 			Connection.saida.writeObject(teste);
@@ -158,53 +172,73 @@ public class ViewCentralController implements Initializable {
 	}
 
 	public void recebeMensagem(Vector<?> requisicao) {
-		String remetente = (String) requisicao.get(2);
 		String mensagem = (String) requisicao.get(3);
 		String horario = (String) requisicao.get(4);
 		
-		
-		FXMLLoader balaoDestinatario;
-		try {
-			balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
-			Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
-			ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
-			controlador.setaMensagem(mensagem, horario);
-			
-			HBox hboxMensagem = new HBox();
-			hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
-			hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
-			hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
-			hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
-			HBox.setMargin(hboxMensagem, new Insets(0, 0, 0, 200));
-			hboxMensagem.setAlignment(Pos.CENTER_LEFT);
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					hboxMensagem.getChildren().add(parentBalaoDestinatario);	
-					vbMensagem.getChildren().add(hboxMensagem);
-				}
-			});		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-		
-	}
-	
-	
-	
-	public void resizeTextArea() {
-		    
-		taEscritura.textProperty().addListener(new ChangeListener<String>() {
+		Platform.runLater(new Runnable() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				
-				System.out.println(taEscritura.getText().length());
-//				Text text = (Text) taEscritura.lookup(".text");
-//				taEscritura.setPrefHeight(text.boundsInParentProperty().get().getMaxY());
+			public void run() {
+				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 1));
 			}
-		});
+		});		
 	}
+	
+	public HBox criaBalaoDeMensagem(String mensagem, String horario, int opcao) {
+		if(opcao == 1) {
+			FXMLLoader balaoDestinatario;
+			try {
+				balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
+				Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
+				ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
+				controlador.setaMensagem(mensagem, horario);
+				
+				HBox hboxMensagem = new HBox();
+				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				HBox.setMargin(hboxMensagem, new Insets(0, 0, 0, 10));
+				hboxMensagem.setAlignment(Pos.CENTER_LEFT);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						hboxMensagem.getChildren().add(parentBalaoDestinatario);	
+					}
+				});	
+				return hboxMensagem;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			FXMLLoader balaoRemetente;
+			try {
+				balaoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemRemetente.fxml"));
+				Parent parentBalaoRemetente = (Parent) balaoRemetente.load();
+				ViewBalaoMensagemRemetenteController controlador = balaoRemetente.getController();
+				controlador.setaMensagem(mensagem, horario);
+				
+				HBox hboxMensagem = new HBox();
+				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				HBox.setMargin(hboxMensagem, new Insets(0, 10, 0, 0));
+				hboxMensagem.setAlignment(Pos.CENTER_RIGHT);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						hboxMensagem.getChildren().add(parentBalaoRemetente);	
+					}
+				});	
+				return hboxMensagem;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
+		return null;
+	}
 
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de
 	// Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
@@ -216,8 +250,6 @@ public class ViewCentralController implements Initializable {
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
 		Thread t = new Thread(sHandler);
 		t.start();
-		
-		resizeTextArea();
 	}
 
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
@@ -248,14 +280,13 @@ public class ViewCentralController implements Initializable {
 
 						switch (operacao) {
 						case "broadcast":
-
 							for (String cliente : usuariosAtivos) {
 								if (!((Vector<String>) requisicao.get(1)).contains(cliente)) {
 									AlertUtils.showNotficacaoLogin(false, cliente);
 								}
 							}
 							ViewCentralController.usuariosAtivos = (Vector<String>) requisicao.get(1);
-							carregaTreeView();
+							carregaVboxUsuariosLogados();
 							if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
 								AlertUtils.showNotficacaoLogin(true,
 										ViewCentralController.usuariosAtivos.lastElement());
@@ -264,7 +295,6 @@ public class ViewCentralController implements Initializable {
 							break;
 
 						case "mensagem":
-							// mensagem = (String) requisicao.get(3);
 							recebeMensagem(requisicao);
 							break;
 						default:

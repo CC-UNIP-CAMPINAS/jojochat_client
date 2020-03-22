@@ -22,8 +22,8 @@ public class ViewUserChatController implements Initializable {
 		lbUser.setText(nome);
 	}
 	
-	public void pegaNome() {
-		System.out.println(lbUser.getText());
+	public String pegaNome() {
+		return lbUser.getText();
 	}
 	
 	public void selecionado() {
@@ -36,7 +36,7 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void clicado() {
-
+		ViewCentralController.setUserParaConversar(pegaNome());
 	}
 
 	@Override

@@ -26,6 +26,11 @@ public class ViewBalaoMensagemRemetenteController implements Initializable{
     @FXML
     private Label lbHorario;
 	
+    public void setaMensagem(String mensagem, String horario) {
+    	lbMensagem.setText(mensagem);
+    	lbHorario.setText(horario);
+    }
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
