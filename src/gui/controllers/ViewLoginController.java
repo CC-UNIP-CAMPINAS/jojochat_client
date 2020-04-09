@@ -14,7 +14,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import utils.Connection;
 
 public class ViewLoginController implements Initializable {
@@ -27,11 +30,17 @@ public class ViewLoginController implements Initializable {
 	@FXML
 	public TextField tfLogin;
 
+	@FXML
+	public PasswordField pfSenha;
+	
+	@FXML
+	public ImageView imgOlho;
+	
+	@FXML
+	public ProgressIndicator piCarregando;
+	
 	public void fazLogin() {
 		try {
-
-			
-
 			Vector<String> login = new Vector<>();
 			login.add("login");
 			login.add(tfLogin.getText());

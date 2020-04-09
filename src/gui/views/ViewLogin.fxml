@@ -1,23 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorCentral" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="314.0" prefWidth="332.0" stylesheets="@css/viewLogin.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewLoginController">
+<AnchorPane fx:id="anchorCentral" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="314.0" prefWidth="619.0" stylesheets="@css/viewLogin.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewLoginController">
    <children>
-      <Pane fx:id="paneCentral" layoutX="24.0" layoutY="10.0" prefHeight="260.0" prefWidth="285.0" />
-      <JFXTextField fx:id="tfLogin" focusColor="#04c582" layoutX="43.0" layoutY="95.0" prefHeight="39.0" prefWidth="247.0" promptText="Usuário" unFocusColor="WHITE">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-      </JFXTextField>
-      <JFXButton fx:id="btLogin" layoutX="16.0" layoutY="258.0" onAction="#fazLogin" prefHeight="40.0" prefWidth="299.0" text="Login" textFill="WHITE">
+      <JFXButton fx:id="btLogin" layoutX="291.0" layoutY="244.0" onAction="#fazLogin" prefHeight="40.0" prefWidth="299.0" text="Login" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </JFXButton>
+      <Pane fx:id="paneLateral" prefHeight="314.0" prefWidth="247.0">
+         <children>
+            <ImageView fitHeight="163.0" fitWidth="199.0" layoutX="25.0" layoutY="76.0">
+               <image>
+                  <Image url="@../../../../../../../Desktop/Imgs/Sema.png" />
+               </image>
+            </ImageView>
+            <JFXSpinner fx:id="piCarregando" layoutX="99.0" layoutY="250.0" visible="false" />
+         </children>
+      </Pane>
+      <TextField fx:id="tfLogin" layoutX="282.0" layoutY="110.0" prefHeight="40.0" prefWidth="316.0" promptText="Usuário">
+         <font>
+            <Font size="19.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="50.0" />
+         </padding>
+      </TextField>
+      <PasswordField fx:id="pfSenha" layoutX="282.0" layoutY="177.0" prefHeight="40.0" prefWidth="316.0" promptText="Senha">
+         <font>
+            <Font size="19.0" />
+         </font>
+         <padding>
+            <Insets left="50.0" right="35.0" />
+         </padding>
+      </PasswordField>
+      <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="292.0" layoutY="114.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../model/img/icons8-male-user-60.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="33.0" layoutX="295.0" layoutY="183.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../model/img/icons8-password-60.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgOlho" fitHeight="33.0" fitWidth="33.0" layoutX="554.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../model/img/icons8-eye-60.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="238.0" fitWidth="217.0" layoutX="263.0" layoutY="-52.0">
+         <image>
+            <Image url="@../../model/img/logo-jojo_chat.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

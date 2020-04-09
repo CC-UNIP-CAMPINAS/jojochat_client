@@ -25,19 +25,19 @@
                   <Insets top="10.0" />
                </padding>
                <children>
-                  <ImageView fx:id="btArquivo" fitHeight="35.0" fitWidth="32.0" layoutX="14.0" layoutY="14.0" rotate="-43.0" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="526.0">
+                  <ImageView fx:id="btArquivo" fitHeight="35.0" fitWidth="32.0" layoutX="15.0" layoutY="16.0" rotate="3.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="523.0">
                      <image>
-                        <Image url="@../../../../../../../AppData/Local/Temp/icons8_attach_60px_3.png" />
+                        <Image url="@../../model/img/icons8-attach-60.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="btEnviar" fitHeight="35.0" fitWidth="32.0" layoutX="531.0" layoutY="14.0" onMouseClicked="#enviaMensagem" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="9.0">
+                  <ImageView fx:id="btEnviar" fitHeight="30.0" fitWidth="34.0" layoutX="521.0" layoutY="21.0" onMouseClicked="#enviaMensagem" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="15.0">
                      <image>
-                        <Image url="@../../../../../../../AppData/Local/Temp/icons8_paper_plane_60px.png" />
+                        <Image url="@../../model/img/icons8-email-send-60.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="btEmoji" fitHeight="35.0" fitWidth="32.0" layoutX="487.0" layoutY="18.0" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="53.0">
+                  <ImageView fx:id="btEmoji" fitHeight="30.0" fitWidth="31.0" layoutX="481.0" layoutY="21.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="58.0">
                      <image>
-                        <Image url="@../../../../../../../AppData/Local/Temp/icons8_blushing_60px.png" />
+                        <Image url="@../../model/img/icons8-smiling-60.png" />
                      </image>
                   </ImageView>
                   <TextArea fx:id="taEscritura" layoutX="55.0" layoutY="12.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="421.0" promptText="Digite uma mensagem" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="97.0">
@@ -56,7 +56,7 @@
                   </Label>
                   <ImageView fx:id="imgUserChamado" fitHeight="45.0" fitWidth="47.0" layoutX="10.0">
                      <image>
-                        <Image url="@../../../../../../../AppData/Local/Temp/icons8_male_user_60px.png" />
+                        <Image url="@../../model/img/icons8-male-user-60.png" />
                      </image>
                   </ImageView>
                </children>
@@ -80,7 +80,7 @@
             </Label>
             <ImageView fx:id="imgUser" fitHeight="45.0" fitWidth="47.0" layoutX="10.0">
                <image>
-                  <Image url="@../../../../../../../AppData/Local/Temp/icons8_male_user_60px.png" />
+                  <Image url="@../../model/img/icons8-male-user-60.png" />
                </image>
             </ImageView>
          </children>
