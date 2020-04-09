@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import app.Main;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,12 +21,14 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import model.entities.Usuario;
+import utils.AlertUtils;
 import utils.ConnectionUtils;
 import utils.CryptUtils;
 
 public class ViewLoginController implements Initializable {
 
 	private static Scene sceneCentral;
+	boolean parada = true;
 
 	@FXML
 	public Button btLogin;
@@ -34,13 +38,13 @@ public class ViewLoginController implements Initializable {
 
 	@FXML
 	public PasswordField pfSenha;
-	
+
 	@FXML
 	public ImageView imgOlho;
-	
+
 	@FXML
 	public ProgressIndicator piCarregando;
-	
+
 	@SuppressWarnings("unchecked")
 	public void fazLogin() {
 		try {
@@ -51,16 +55,50 @@ public class ViewLoginController implements Initializable {
 			ConnectionUtils.saida.writeObject(login);
 			ConnectionUtils.saida.reset();
 
-			Vector<Object> resposta = (Vector<Object>) ConnectionUtils.entrada.readObject();
+			piCarregando.setVisible(true);
+			parada = true;
 
-				Boolean permissaoDeLogin = (Boolean) resposta.get(0);
-				if (permissaoDeLogin) {
-					ViewCentralController.setUser(new Usuario((String) resposta.get(1), (String)resposta.get(2)));
-					carregaTelaPrincipal();
-				} else {
-					System.out.println("Escolha outro usuários!");
+			Task<Void> tarefa = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					while (parada) {
+						Thread.sleep(0);
+					}
+					piCarregando.setVisible(false);
+					return null;
 				}
-			
+			};
+
+			Platform.runLater(() -> {
+				Thread t = new Thread(tarefa);
+				t.start();
+			});
+
+			Task<Void> acaoCarregarLogin = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					Vector<Object> resposta = (Vector<Object>) ConnectionUtils.entrada.readObject();
+					Boolean permissaoDeLogin = (Boolean) resposta.get(0);
+					if (permissaoDeLogin) {
+						ViewCentralController.setUser(new Usuario((String) resposta.get(1), (String) resposta.get(2)));
+						Platform.runLater(() -> {
+							carregaTelaPrincipal();
+						});
+
+					} else {
+						AlertUtils.showNotificacaoErroLogin(resposta.size());
+					}
+
+					parada = false;
+
+					return null;
+				}
+			};
+
+			Platform.runLater(() -> {
+				Thread t = new Thread(acaoCarregarLogin);
+				t.start();
+			});
 
 		} catch (EOFException | SocketException e) {
 			e.printStackTrace();
