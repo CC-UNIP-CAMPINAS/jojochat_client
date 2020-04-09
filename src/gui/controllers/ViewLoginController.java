@@ -18,7 +18,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import utils.Connection;
+import model.entities.Usuario;
+import utils.ConnectionUtils;
+import utils.CryptUtils;
 
 public class ViewLoginController implements Initializable {
 
@@ -39,24 +41,26 @@ public class ViewLoginController implements Initializable {
 	@FXML
 	public ProgressIndicator piCarregando;
 	
+	@SuppressWarnings("unchecked")
 	public void fazLogin() {
 		try {
 			Vector<String> login = new Vector<>();
 			login.add("login");
 			login.add(tfLogin.getText());
-			Connection.saida.writeObject(login);
-			Connection.saida.reset();
+			login.add(CryptUtils.sha256(pfSenha.getText()));
+			ConnectionUtils.saida.writeObject(login);
+			ConnectionUtils.saida.reset();
 
-			Object resposta = Connection.entrada.readObject();
-			if (resposta instanceof Boolean) {
-				Boolean permissaoDeLogin = (Boolean) resposta;
+			Vector<Object> resposta = (Vector<Object>) ConnectionUtils.entrada.readObject();
+
+				Boolean permissaoDeLogin = (Boolean) resposta.get(0);
 				if (permissaoDeLogin) {
-					ViewCentralController.setUser(tfLogin.getText());
+					ViewCentralController.setUser(new Usuario((String) resposta.get(1), (String)resposta.get(2)));
 					carregaTelaPrincipal();
 				} else {
 					System.out.println("Escolha outro usuários!");
 				}
-			}
+			
 
 		} catch (EOFException | SocketException e) {
 			e.printStackTrace();

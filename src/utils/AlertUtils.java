@@ -7,7 +7,7 @@ import javafx.application.Platform;
 public class AlertUtils {
 
 	
-	public static void showNotficacaoLogin(boolean status, String usuario) {
+	public static void showNotificacaoLogin(boolean status, String usuario) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {

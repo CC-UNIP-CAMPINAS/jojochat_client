@@ -6,13 +6,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Connection implements AutoCloseable{
+public class ConnectionUtils implements AutoCloseable{
 	private Socket conexaoServer = null;
 	public static ObjectOutputStream saida;
     public static ObjectInputStream entrada;
 	
 
-	public Connection(String aHost, int aPort) throws UnknownHostException, IOException {
+	public ConnectionUtils(String aHost, int aPort) throws UnknownHostException, IOException {
 			this.conexaoServer = new Socket(aHost, aPort);
 	}
 	

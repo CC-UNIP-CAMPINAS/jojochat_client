@@ -7,10 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import model.entities.Usuario;
 
 public class ViewUserChatController implements Initializable {
 	
-	public String usuario;
+	public Usuario usuario;
 	
 	@FXML
 	private AnchorPane apUserChat;
@@ -18,8 +19,9 @@ public class ViewUserChatController implements Initializable {
 	@FXML
 	private Label lbUser;
 	
-	public void setaNomeUsuario(String nome) {
-		lbUser.setText(nome);
+	public void setaUsuario(Usuario usuario) {
+		this.usuario = usuario;
+		lbUser.setText(usuario.getNomeDeExibicao());
 	}
 	
 	public String pegaNome() {
@@ -36,10 +38,11 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void clicado() {
-		ViewCentralController.setUserParaConversar(pegaNome());
+		ViewCentralController.setUserParaConversar(usuario);
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 	}
 }

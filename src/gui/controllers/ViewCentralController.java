@@ -12,8 +12,6 @@ import java.util.Vector;
 
 import app.Main;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,15 +26,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.entities.Usuario;
 import utils.AlertUtils;
-import utils.Connection;
+import utils.ConnectionUtils;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
-	private static String user;
-	private static String userParaConversar;
+	private static Usuario user;
+	private static Usuario userParaConversar;
 
-	static Vector<String> usuariosAtivos = new Vector<String>();
+	static Vector<Usuario> usuariosAtivos = new Vector<>();
 
 	@FXML
     private ScrollPane scrollPaneUser;
@@ -93,19 +92,19 @@ public class ViewCentralController implements Initializable {
 
 	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
 
-	public static String getUser() {
+	public static Usuario getUser() {
 		return user;
 	}
 
-	public static void setUser(String user) {
+	public static void setUser(Usuario user) {
 		ViewCentralController.user = user;
 	}
 	
-	public static String getUserParaConversar() {
+	public static Usuario getUserParaConversar() {
 		return userParaConversar;
 	}
 
-	public static void setUserParaConversar(String userParaConversar) {
+	public static void setUserParaConversar(Usuario userParaConversar) {
 		ViewCentralController.userParaConversar = userParaConversar;
 	}
 
@@ -116,7 +115,7 @@ public class ViewCentralController implements Initializable {
 	// Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
 
 	public void abreConversa() {
-		lbUserChamado.setText(ViewCentralController.userParaConversar);
+		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
 	}
 
 	public void carregaVboxUsuariosLogados() throws IOException {
@@ -124,14 +123,14 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbUsuariosLogadas.getChildren().clear();
-				for (String usuarios : usuariosAtivos) {
+				for (Usuario usuarios : usuariosAtivos) {
 					if (!usuarios.equals(user)) {
 						FXMLLoader userChatLoader;
 						try {
 							userChatLoader = new FXMLLoader(getClass().getResource("/gui/views/ViewUserChat.fxml"));
 							Parent userChatParent = (Parent) userChatLoader.load();
 							ViewUserChatController controlador = userChatLoader.getController();
-							controlador.setaNomeUsuario(usuarios);
+							controlador.setaUsuario(usuarios);
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -164,8 +163,8 @@ public class ViewCentralController implements Initializable {
 		});	
 
 		try {
-			Connection.saida.writeObject(teste);
-			Connection.saida.reset();
+			ConnectionUtils.saida.writeObject(teste);
+			ConnectionUtils.saida.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -245,9 +244,9 @@ public class ViewCentralController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		lbUser.setText(user);
+		lbUser.setText(user.getNomeDeExibicao());
 
-		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), Connection.entrada);
+		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
 		t.start();
 	}
@@ -280,16 +279,16 @@ public class ViewCentralController implements Initializable {
 
 						switch (operacao) {
 						case "broadcast":
-							for (String cliente : usuariosAtivos) {
-								if (!((Vector<String>) requisicao.get(1)).contains(cliente)) {
-									AlertUtils.showNotficacaoLogin(false, cliente);
+							for (Usuario usuario : usuariosAtivos) {
+								if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
+									AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
 								}
 							}
-							ViewCentralController.usuariosAtivos = (Vector<String>) requisicao.get(1);
+							ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
 							carregaVboxUsuariosLogados();
 							if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
-								AlertUtils.showNotficacaoLogin(true,
-										ViewCentralController.usuariosAtivos.lastElement());
+								AlertUtils.showNotificacaoLogin(true,
+										ViewCentralController.usuariosAtivos.lastElement().getUsuario());
 							}
 
 							break;

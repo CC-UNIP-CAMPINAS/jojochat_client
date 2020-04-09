@@ -15,12 +15,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import utils.Connection;
+import utils.ConnectionUtils;
 
 public class Main extends Application {
     public static Stage primaryStage = new Stage();
     private static Scene login;
-    public static Connection conexao;
+    public static ConnectionUtils conexao;
     
 
     @Override
@@ -55,9 +55,9 @@ public class Main extends Application {
                     return new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
-                        	conexao = new Connection("10.0.10.100", 12345);
-                        	Connection.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
-                        	Connection.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
+                        	conexao = new ConnectionUtils("localhost", 12345);
+                        	ConnectionUtils.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
+                        	ConnectionUtils.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
                            /* Socket cliente = new Socket("127.0.0.1", 12345);
                             System.out.println("O cliente se conectou ao servidor!");
 
