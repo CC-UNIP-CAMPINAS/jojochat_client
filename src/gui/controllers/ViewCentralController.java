@@ -38,59 +38,57 @@ public class ViewCentralController implements Initializable {
 	static Vector<Usuario> usuariosAtivos = new Vector<>();
 
 	@FXML
-    private ScrollPane scrollPaneUser;
+	private ScrollPane scrollPaneUser;
 
-    @FXML
-    private VBox vbUsuariosLogadas;
+	@FXML
+	private VBox vbUsuariosLogadas;
 
-    @FXML
-    private AnchorPane apCentral;
+	@FXML
+	private AnchorPane apCentral;
 
-    @FXML
-    private AnchorPane apCentralInf;
+	@FXML
+	private AnchorPane apCentralInf;
 
-    @FXML
-    private ImageView btArquivo;
+	@FXML
+	private ImageView btArquivo;
 
-    @FXML
-    private ImageView btEnviar;
+	@FXML
+	private ImageView btEnviar;
 
-    @FXML
-    private ImageView btEmoji;
+	@FXML
+	private ImageView btEmoji;
 
-    @FXML
-    private TextArea taEscritura;
+	@FXML
+	private TextArea taEscritura;
 
-    @FXML
-    private AnchorPane apCentralSup;
+	@FXML
+	private AnchorPane apCentralSup;
 
-    @FXML
-    private Label lbUserChamado;
+	@FXML
+	private Label lbUserChamado;
 
-    @FXML
-    private ImageView imgUserChamado;
+	@FXML
+	private ImageView imgUserChamado;
 
-    @FXML
-    private ScrollPane scrollPaneMensagens;
+	@FXML
+	private ScrollPane scrollPaneMensagens;
 
-    @FXML
-    private VBox vbMensagem;
+	@FXML
+	private VBox vbMensagem;
 
-    @FXML
-    private AnchorPane apLeftSup;
+	@FXML
+	private AnchorPane apLeftSup;
 
-    @FXML
-    private Label lbUser;
+	@FXML
+	private Label lbUser;
 
-    @FXML
-    private ImageView imgUser;
+	@FXML
+	private ImageView imgUser;
 
-    @FXML
-    private TextField tfPesquisa;
+	@FXML
+	private TextField tfPesquisa;
 
-
-
-	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Gets/Sets=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	// #################Gets/Sets################# //
 
 	public static Usuario getUser() {
 		return user;
@@ -99,7 +97,7 @@ public class ViewCentralController implements Initializable {
 	public static void setUser(Usuario user) {
 		ViewCentralController.user = user;
 	}
-	
+
 	public static Usuario getUserParaConversar() {
 		return userParaConversar;
 	}
@@ -108,11 +106,7 @@ public class ViewCentralController implements Initializable {
 		ViewCentralController.userParaConversar = userParaConversar;
 	}
 
-	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Gets/Sets=-
-	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
-
-	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Ações de
-	// Componentes=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	// #################Ações de Componentes################# //
 
 	public void abreConversa() {
 		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
@@ -134,7 +128,7 @@ public class ViewCentralController implements Initializable {
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
-						}	
+						}
 					}
 				}
 			}
@@ -154,13 +148,13 @@ public class ViewCentralController implements Initializable {
 		teste.add(user);
 		teste.add(mensagem);
 		teste.add(horario);
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 2));
 			}
-		});	
+		});
 
 		try {
 			ConnectionUtils.saida.writeObject(teste);
@@ -173,24 +167,39 @@ public class ViewCentralController implements Initializable {
 	public void recebeMensagem(Vector<?> requisicao) {
 		String mensagem = (String) requisicao.get(3);
 		String horario = (String) requisicao.get(4);
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 1));
 			}
-		});		
+		});
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public void recebeBroadcast(Vector<?> requisicao) throws IOException {
+		for (Usuario usuario : usuariosAtivos) {
+			if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
+				AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
+			}
+		}
+		ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
+		carregaVboxUsuariosLogados();
+		if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
+			AlertUtils.showNotificacaoLogin(true, ViewCentralController.usuariosAtivos.lastElement().getUsuario());
+		}
+	}
+
 	public HBox criaBalaoDeMensagem(String mensagem, String horario, int opcao) {
-		if(opcao == 1) {
+		if (opcao == 1) {
 			FXMLLoader balaoDestinatario;
 			try {
-				balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
+				balaoDestinatario = new FXMLLoader(
+						getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
 				Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
 				ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
 				controlador.setaMensagem(mensagem, horario);
-				
+
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
 				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
@@ -201,22 +210,21 @@ public class ViewCentralController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						hboxMensagem.getChildren().add(parentBalaoDestinatario);	
+						hboxMensagem.getChildren().add(parentBalaoDestinatario);
 					}
-				});	
+				});
 				return hboxMensagem;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			FXMLLoader balaoRemetente;
 			try {
 				balaoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemRemetente.fxml"));
 				Parent parentBalaoRemetente = (Parent) balaoRemetente.load();
 				ViewBalaoMensagemRemetenteController controlador = balaoRemetente.getController();
 				controlador.setaMensagem(mensagem, horario);
-				
+
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
 				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
@@ -227,20 +235,17 @@ public class ViewCentralController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						hboxMensagem.getChildren().add(parentBalaoRemetente);	
+						hboxMensagem.getChildren().add(parentBalaoRemetente);
 					}
-				});	
+				});
 				return hboxMensagem;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return null;
 	}
-
-	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-=Ações de
-	// Componentes=-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -251,7 +256,7 @@ public class ViewCentralController implements Initializable {
 		t.start();
 	}
 
-	// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv-=Thread=-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+	// #################Thread#################//
 
 	class ServerHandler implements Runnable {
 
@@ -260,37 +265,25 @@ public class ViewCentralController implements Initializable {
 		String operacao;
 		Vector<?> requisicao;
 		Object recebido;
-		String mensagem;
 
 		public ServerHandler(Socket cliente, ObjectInputStream entrada) {
 			this.cliente = cliente;
 			this.entrada = entrada;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			try {
 				while (true) {
 					recebido = entrada.readObject();
 					if (recebido instanceof Vector<?>) {
+
 						requisicao = (Vector<?>) recebido;
 						operacao = (String) requisicao.get(0);
 
 						switch (operacao) {
 						case "broadcast":
-							for (Usuario usuario : usuariosAtivos) {
-								if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
-									AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
-								}
-							}
-							ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
-							carregaVboxUsuariosLogados();
-							if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
-								AlertUtils.showNotificacaoLogin(true,
-										ViewCentralController.usuariosAtivos.lastElement().getUsuario());
-							}
-
+							recebeBroadcast(requisicao);
 							break;
 
 						case "mensagem":
