@@ -2,18 +2,20 @@ package model.entities;
 
 import java.io.Serializable;
 
-public class Usuario implements Serializable{
+public class Usuario implements Serializable{	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8814703786891459391L;
+	private static final long serialVersionUID = 1423238495738038990L;
 	
 	private String nomeDeExibicao;
 	private String usuario;
+	private int id;
 	
-	public Usuario(String nomeDeExibicao, String usuario) {
+	public Usuario(int id, String nomeDeExibicao, String usuario) {
 		this.nomeDeExibicao = nomeDeExibicao;
 		this.usuario = usuario;
+		this.id = id;
 	}
 	
 	public String getUsuario() {
@@ -31,6 +33,14 @@ public class Usuario implements Serializable{
 	public void setNomeDeExibicao(String nomeDeExibicao) {
 		this.nomeDeExibicao = nomeDeExibicao;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -41,10 +51,7 @@ public class Usuario implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (usuario == null) {
-			if (other.usuario != null)
-				return false;
-		} else if (!usuario.equals(other.usuario))
+		if (id != other.id)
 			return false;
 		return true;
 	}

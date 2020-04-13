@@ -4,7 +4,15 @@
     
 }
 
-#apCentral{
+#bpCentral{
+	-fx-background-image: url("../../../model/img/spBack.png");
+	-fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+   -fx-background-size: 60%;
+	
+}
+
+#apCentral, #apCentral2{
 	-fx-background-color: #ebeaed;
 	-fx-background-size: cover;
 	-fx-border-color: transparent transparent #d3d3d3 #d3d3d3;

@@ -80,7 +80,7 @@ public class ViewLoginController implements Initializable {
 					Vector<Object> resposta = (Vector<Object>) ConnectionUtils.entrada.readObject();
 					Boolean permissaoDeLogin = (Boolean) resposta.get(0);
 					if (permissaoDeLogin) {
-						ViewCentralController.setUser(new Usuario((String) resposta.get(1), (String) resposta.get(2)));
+						ViewCentralController.setUser((Usuario) resposta.get(1));
 						Platform.runLater(() -> {
 							carregaTelaPrincipal();
 						});

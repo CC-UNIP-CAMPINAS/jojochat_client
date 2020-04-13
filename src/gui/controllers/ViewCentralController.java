@@ -26,14 +26,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.AlertUtils;
 import utils.ConnectionUtils;
+import utils.ConversorDataUtils;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
 	private static Usuario user;
 	private static Usuario userParaConversar;
+	public static AnchorPane apCentralStatic;
 
 	static Vector<Usuario> usuariosAtivos = new Vector<>();
 
@@ -104,8 +107,16 @@ public class ViewCentralController implements Initializable {
 
 	public static void setUserParaConversar(Usuario userParaConversar) {
 		ViewCentralController.userParaConversar = userParaConversar;
+		ViewCentralController.apCentralStatic.setVisible(true);
+		
 	}
 
+	// #################Associação de componentes Statics################# //
+	
+	public void associaComponentesStaticos() {
+		ViewCentralController.apCentralStatic = apCentral;
+	}
+	
 	// #################Ações de Componentes################# //
 
 	public void abreConversa() {
@@ -136,28 +147,25 @@ public class ViewCentralController implements Initializable {
 	}
 
 	public void enviaMensagem() {
-		int hora = LocalDateTime.now().getHour();
-		int minuto = LocalDateTime.now().getMinute();
-		String horario = hora + ":" + minuto;
-		String mensagem = taEscritura.getText();
+		LocalDateTime horario = LocalDateTime.now();
+		String textoDaMensagem = taEscritura.getText();
 		taEscritura.clear();
 
-		Vector<Object> teste = new Vector<>();
-		teste.add("mensagem");
-		teste.add(ViewCentralController.getUserParaConversar());
-		teste.add(user);
-		teste.add(mensagem);
-		teste.add(horario);
+		Vector<Object> requisicao = new Vector<>();
+		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
+		
+		requisicao.add("mensagem");	
+		requisicao.add(mensagemParaEnvio);
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 2));
+				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagemParaEnvio, 2));
 			}
 		});
 
 		try {
-			ConnectionUtils.saida.writeObject(teste);
+			ConnectionUtils.saida.writeObject(requisicao);
 			ConnectionUtils.saida.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -165,13 +173,12 @@ public class ViewCentralController implements Initializable {
 	}
 
 	public void recebeMensagem(Vector<?> requisicao) {
-		String mensagem = (String) requisicao.get(3);
-		String horario = (String) requisicao.get(4);
+		Mensagem mensagem = (Mensagem) requisicao.get(1);
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, horario, 1));
+				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, 1));
 			}
 		});
 	}
@@ -190,15 +197,16 @@ public class ViewCentralController implements Initializable {
 		}
 	}
 
-	public HBox criaBalaoDeMensagem(String mensagem, String horario, int opcao) {
+	public HBox criaBalaoDeMensagem(Mensagem conversa, int opcao) {
+		String horarioFormatado = ConversorDataUtils.getTimeToString(conversa.getDateTime());
+		
 		if (opcao == 1) {
 			FXMLLoader balaoDestinatario;
 			try {
-				balaoDestinatario = new FXMLLoader(
-						getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
+				balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
 				Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
 				ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
-				controlador.setaMensagem(mensagem, horario);
+				controlador.setaMensagem(conversa.getMensagem(), horarioFormatado);
 
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
@@ -223,7 +231,7 @@ public class ViewCentralController implements Initializable {
 				balaoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemRemetente.fxml"));
 				Parent parentBalaoRemetente = (Parent) balaoRemetente.load();
 				ViewBalaoMensagemRemetenteController controlador = balaoRemetente.getController();
-				controlador.setaMensagem(mensagem, horario);
+				controlador.setaMensagem(conversa.getMensagem(), horarioFormatado);
 
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
@@ -250,6 +258,8 @@ public class ViewCentralController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lbUser.setText(user.getNomeDeExibicao());
+		
+		associaComponentesStaticos();
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
