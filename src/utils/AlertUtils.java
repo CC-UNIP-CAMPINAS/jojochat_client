@@ -4,6 +4,7 @@ import org.controlsfx.control.Notifications;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import model.entities.Mensagem;
 
 public class AlertUtils {
 
@@ -30,7 +31,7 @@ public class AlertUtils {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if(!(quant == 3)) {
+				if(!(quant == 2)) {
 					Notifications not = Notifications.create();
 					not.position(Pos.CENTER);
 					not.title("Dados incorretos!");
@@ -48,4 +49,17 @@ public class AlertUtils {
 			}
 		});
 	}
+	public static void showNotificacaoErroMensagem(Mensagem mensagem) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+					Notifications not = Notifications.create();
+					not.position(Pos.BOTTOM_RIGHT);
+					not.title("Nova Mensagem!");
+					not.text(mensagem.getRemetente().getNomeDeExibicao() + ": " + mensagem.getMensagem());
+					not.showInformation();				
+			}
+		});
+	}
+	
 }

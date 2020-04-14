@@ -174,13 +174,17 @@ public class ViewCentralController implements Initializable {
 
 	public void recebeMensagem(Vector<?> requisicao) {
 		Mensagem mensagem = (Mensagem) requisicao.get(1);
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, 1));
-			}
-		});
+		if(mensagem.getRemetente().equals(userParaConversar)) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, 1));
+				}
+			});
+		}
+		else {
+			AlertUtils.showNotificacaoErroMensagem(mensagem);
+		}		
 	}
 
 	@SuppressWarnings("unchecked")
