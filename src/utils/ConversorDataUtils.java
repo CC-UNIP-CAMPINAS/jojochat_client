@@ -13,6 +13,12 @@ public class ConversorDataUtils {
 		return novoHorario;
 	}
 
+	public static String getDateToString(LocalDateTime dateTime) {
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyy");
+		String novaDateTime = formatador.format(dateTime);
+		return novaDateTime;
+	}
+	
 	public static String getDateTimeToString(LocalDateTime dateTime) {
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String novaDateTime = formatador.format(dateTime);

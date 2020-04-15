@@ -136,7 +136,12 @@ public class ViewCentralController implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				vbMensagem.getChildren().add(criaBalaoDeMensagem(conversa, opcao));
+				if(opcao == 3) {
+					vbMensagem.getChildren().add(criaBalaoDeData(conversa));
+				}
+				else {
+					vbMensagem.getChildren().add(criaBalaoDeMensagem(conversa, opcao));
+				}
 			}
 		});
 	}
@@ -222,6 +227,36 @@ public class ViewCentralController implements Initializable {
 		return null;
 	}
 	
+	public HBox criaBalaoDeData(Mensagem conversa) {
+		String data = ConversorDataUtils.getDateToString(conversa.getDateTime());
+			FXMLLoader balaoData;
+			try {
+				balaoData = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoDataCentral.fxml"));
+				Parent parentBalaoData = (Parent) balaoData.load();
+				ViewBalaoDataCentralController controlador = balaoData.getController();
+				controlador.setaData(data);
+
+				HBox hboxMensagem = new HBox();
+				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+				HBox.setMargin(hboxMensagem, new Insets(0, 10, 0, 0));
+				hboxMensagem.setAlignment(Pos.CENTER);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						hboxMensagem.getChildren().add(parentBalaoData);
+					}
+				});
+				return hboxMensagem;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		return null;
+	}
+	
 	// #################Ações de Componentes################# //
 
 	public void enviaMensagem() {
@@ -258,14 +293,22 @@ public class ViewCentralController implements Initializable {
 	@SuppressWarnings("unchecked")
 	private void recebeHistoricoMensagem(Vector<?> requisicao) {
 		limpaConversa();
+		Vector<Mensagem>  historicoMensagens = (Vector<Mensagem>)requisicao.get(1);
 		
-		for (Mensagem mensagemHistorico : (Vector<Mensagem>)requisicao.get(1)) {
+		LocalDateTime dataTeporaria = historicoMensagens.firstElement().getDateTime();
+		colocaBalaoConversa(historicoMensagens.firstElement(), 3);
+		
+		for (Mensagem mensagemHistorico : historicoMensagens) {
+			if(mensagemHistorico.getDateTime().toLocalDate().isAfter(dataTeporaria.toLocalDate())) {
+				dataTeporaria = mensagemHistorico.getDateTime();
+				colocaBalaoConversa(mensagemHistorico, 3);
+			}
 			if(mensagemHistorico.getRemetente().equals(user)) {
 				colocaBalaoConversa(mensagemHistorico, 2);
 			}
 			else {
 				colocaBalaoConversa(mensagemHistorico, 1);
-			}
+			}	
 		}	
 	}
 

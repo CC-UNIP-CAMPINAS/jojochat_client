@@ -1,0 +1,9 @@
+#apCentral{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+
+#apInterno{
+	-fx-background-color: #DCF8C6;
+	-fx-background-radius: 1em;
+}
