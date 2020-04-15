@@ -3,9 +3,11 @@ package model.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Mensagem implements Serializable{
-	
-	private static final long serialVersionUID = 1605005480595465782L;
+public class Mensagem implements Serializable, Comparable<Mensagem>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5425106074929819256L;
 	
 	private String mensagem;
 	private Usuario remetente;
@@ -51,5 +53,9 @@ public class Mensagem implements Serializable{
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
-	
+
+	@Override
+	public int compareTo(Mensagem o) {	
+		return this.dateTime.compareTo(o.dateTime);
+	}	
 }

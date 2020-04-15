@@ -117,12 +117,30 @@ public class ViewCentralController implements Initializable {
 		ViewCentralController.apCentralStatic = apCentral;
 	}
 	
-	// #################Ações de Componentes################# //
-
+	// #################Utilitarios do controlador################# //
+	
 	public void abreConversa() {
 		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
 	}
-
+	
+	public void limpaConversa() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				vbMensagem.getChildren().clear();
+			}
+		});
+	}
+	
+	public void colocaBalaoConversa(Mensagem conversa, int opcao) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				vbMensagem.getChildren().add(criaBalaoDeMensagem(conversa, opcao));
+			}
+		});
+	}
+	
 	public void carregaVboxUsuariosLogados() throws IOException {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -145,62 +163,7 @@ public class ViewCentralController implements Initializable {
 			}
 		});
 	}
-
-	public void enviaMensagem() {
-		LocalDateTime horario = LocalDateTime.now();
-		String textoDaMensagem = taEscritura.getText();
-		taEscritura.clear();
-
-		Vector<Object> requisicao = new Vector<>();
-		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
-		
-		requisicao.add("mensagem");	
-		requisicao.add(mensagemParaEnvio);
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagemParaEnvio, 2));
-			}
-		});
-
-		try {
-			ConnectionUtils.saida.writeObject(requisicao);
-			ConnectionUtils.saida.reset();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void recebeMensagem(Vector<?> requisicao) {
-		Mensagem mensagem = (Mensagem) requisicao.get(1);
-		if(mensagem.getRemetente().equals(userParaConversar)) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					vbMensagem.getChildren().add(criaBalaoDeMensagem(mensagem, 1));
-				}
-			});
-		}
-		else {
-			AlertUtils.showNotificacaoErroMensagem(mensagem);
-		}		
-	}
-
-	@SuppressWarnings("unchecked")
-	public void recebeBroadcast(Vector<?> requisicao) throws IOException {
-		for (Usuario usuario : usuariosAtivos) {
-			if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
-				AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
-			}
-		}
-		ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
-		carregaVboxUsuariosLogados();
-		if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
-			AlertUtils.showNotificacaoLogin(true, ViewCentralController.usuariosAtivos.lastElement().getUsuario());
-		}
-	}
-
+	
 	public HBox criaBalaoDeMensagem(Mensagem conversa, int opcao) {
 		String horarioFormatado = ConversorDataUtils.getTimeToString(conversa.getDateTime());
 		
@@ -258,6 +221,67 @@ public class ViewCentralController implements Initializable {
 
 		return null;
 	}
+	
+	// #################Ações de Componentes################# //
+
+	public void enviaMensagem() {
+		LocalDateTime horario = LocalDateTime.now();
+		String textoDaMensagem = taEscritura.getText();
+		taEscritura.clear();
+
+		Vector<Object> requisicao = new Vector<>();
+		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
+		
+		requisicao.add("mensagem");	
+		requisicao.add(mensagemParaEnvio);
+		
+		colocaBalaoConversa(mensagemParaEnvio, 2);
+
+		try {
+			ConnectionUtils.saida.writeObject(requisicao);
+			ConnectionUtils.saida.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void recebeMensagem(Vector<?> requisicao) {
+		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
+		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
+			colocaBalaoConversa(mensagemRecebida, 1);
+		}
+		else {
+			AlertUtils.showNotificacaoErroMensagem(mensagemRecebida);
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void recebeHistoricoMensagem(Vector<?> requisicao) {
+		limpaConversa();
+		
+		for (Mensagem mensagemHistorico : (Vector<Mensagem>)requisicao.get(1)) {
+			if(mensagemHistorico.getRemetente().equals(user)) {
+				colocaBalaoConversa(mensagemHistorico, 2);
+			}
+			else {
+				colocaBalaoConversa(mensagemHistorico, 1);
+			}
+		}	
+	}
+
+	@SuppressWarnings("unchecked")
+	public void recebeBroadcast(Vector<?> requisicao) throws IOException {
+		for (Usuario usuario : usuariosAtivos) {
+			if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
+				AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
+			}
+		}
+		ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
+		carregaVboxUsuariosLogados();
+		if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
+			AlertUtils.showNotificacaoLogin(true, ViewCentralController.usuariosAtivos.lastElement().getUsuario());
+		}
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -303,6 +327,9 @@ public class ViewCentralController implements Initializable {
 						case "mensagem":
 							recebeMensagem(requisicao);
 							break;
+						case "historico":
+							recebeHistoricoMensagem(requisicao);
+							break;	
 						default:
 							break;
 						}
