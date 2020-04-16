@@ -6,17 +6,24 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" onMouseEntered="#selecionado" onMouseExited="#deSeleciona" prefHeight="61.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
+<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" onMouseEntered="#selecionado" onMouseExited="#deSeleciona" prefHeight="62.0" prefWidth="315.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
    <children>
-      <Circle fill="DODGERBLUE" layoutX="43.0" layoutY="30.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="lbUser" layoutX="68.0" layoutY="7.0" prefHeight="27.0" prefWidth="194.0">
+      <Circle fill="DODGERBLUE" layoutX="31.0" layoutY="31.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="lbUser" layoutX="70.0" layoutY="7.0" prefHeight="27.0" prefWidth="214.0">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Circle fill="#2eff54" layoutX="12.0" layoutY="31.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#2eff54" layoutX="267.0" layoutY="45.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="263.0" layoutY="37.0" text="1" />
-      <Line endX="-29.0" fill="BLACK" layoutX="156.0" layoutY="61.0" startX="-136.5" stroke="#b9b6b6" strokeWidth="0.3" AnchorPane.leftAnchor="19.0" />
+      <Circle fill="#06d755" layoutX="282.0" layoutY="42.0" radius="10.0" stroke="#06d755" strokeType="INSIDE" />
+      <Label layoutX="278.0" layoutY="34.0" text="1" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+      <Line endX="-29.0" fill="#a5c3df" layoutX="147.0" layoutY="61.0" startX="-136.5" stroke="#a5c3df" AnchorPane.leftAnchor="10.0" />
+      <Label fx:id="lbMensagem" layoutX="71.0" layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="27.0" prefWidth="187.0" text="uma curruja muito bonita eeee">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

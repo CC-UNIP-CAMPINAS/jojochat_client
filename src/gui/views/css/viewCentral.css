@@ -15,6 +15,10 @@
 #apCentral, #apCentral2{
 	-fx-background-color: #ebeaed;
 	-fx-background-size: cover;
+	
+}
+
+#apCentral2{
 	-fx-border-color: transparent transparent #d3d3d3 #d3d3d3;
 	
 }
@@ -39,6 +43,10 @@
     -fx-background-color: transparent;
 }
 
+#tfPesquisa{
+	-fx-border-color:  transparent transparent #d3d3d3 transparent;
+}
+
 #apCentralInf{
 	-fx-border-color: #d3d3d3 transparent transparent transparent;
 }
@@ -46,6 +54,33 @@
 #apCentralSup, #apLeftSup{
 	-fx-border-color: transparent transparent #d3d3d3 transparent;
 }
+
+
+/*TABPANE */
+
+#tabPaneConversas .tab-header-background{
+	-fx-background-color: #ebeaed;
+}
+
+.tab {
+	-fx-border-color: transparent transparent #D7D7D7 transparent;
+	-fx-border-width: 10;
+	-fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+    -fx-padding: 5 0 15 0;
+    -fx-background-color: #ebeaed;
+}
+
+.tab:selected{
+	-fx-border-color: transparent transparent #A5C3DF transparent;
+}
+
+#acTabNovasConversas{
+	-fx-border-color: #d7d7d7 transparent transparent transparent;
+}
+
+
+/*SCROLL */
 
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{

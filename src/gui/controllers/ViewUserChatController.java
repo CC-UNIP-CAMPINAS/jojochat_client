@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.ConnectionUtils;
 
@@ -22,9 +23,16 @@ public class ViewUserChatController implements Initializable {
 	@FXML
 	private Label lbUser;
 	
+	@FXML
+	private Label lbMensagem;
+	
 	public void setaUsuario(Usuario usuario) {
 		this.usuario = usuario;
 		lbUser.setText(usuario.getNomeDeExibicao());
+	}
+	
+	public void setaMensagem(Mensagem mensagem) {
+		lbMensagem.setText(mensagem.getMensagem());
 	}
 	
 	public String pegaNome() {

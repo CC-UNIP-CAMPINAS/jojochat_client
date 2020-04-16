@@ -39,12 +39,16 @@ public class ViewCentralController implements Initializable {
 	public static AnchorPane apCentralStatic;
 
 	static Vector<Usuario> usuariosAtivos = new Vector<>();
+	static Vector<ViewUserChatController> chatsAtivos = new Vector<>();
 
 	@FXML
 	private ScrollPane scrollPaneUser;
 
 	@FXML
 	private VBox vbUsuariosLogadas;
+	
+	@FXML
+	private VBox vbConversas;
 
 	@FXML
 	private AnchorPane apCentral;
@@ -72,9 +76,6 @@ public class ViewCentralController implements Initializable {
 
 	@FXML
 	private ImageView imgUserChamado;
-
-	@FXML
-	private ScrollPane scrollPaneMensagens;
 
 	@FXML
 	private VBox vbMensagem;
@@ -123,6 +124,25 @@ public class ViewCentralController implements Initializable {
 		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
 	}
 	
+	public ViewUserChatController buscaUsuarioChat(Usuario usuario) {
+		for (ViewUserChatController viewUserChatController : chatsAtivos) {
+			if(usuario.equals(viewUserChatController.usuario)) {
+				return viewUserChatController;
+			}
+		}
+		return null;
+	}
+	
+	public void atualizaVboxUsuariosLogados(Mensagem mensagem, Usuario usuario) {
+		ViewUserChatController userChat = buscaUsuarioChat(usuario);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				userChat.setaMensagem(mensagem);
+			}
+		});
+	}
+	
 	public void limpaConversa() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -151,6 +171,7 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbUsuariosLogadas.getChildren().clear();
+				chatsAtivos.clear();
 				for (Usuario usuarios : usuariosAtivos) {
 					if (!usuarios.equals(user)) {
 						FXMLLoader userChatLoader;
@@ -159,6 +180,7 @@ public class ViewCentralController implements Initializable {
 							Parent userChatParent = (Parent) userChatLoader.load();
 							ViewUserChatController controlador = userChatLoader.getController();
 							controlador.setaUsuario(usuarios);
+							chatsAtivos.add(controlador);
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -271,6 +293,8 @@ public class ViewCentralController implements Initializable {
 		requisicao.add(mensagemParaEnvio);
 		
 		colocaBalaoConversa(mensagemParaEnvio, 2);
+		
+		atualizaVboxUsuariosLogados(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
 
 		try {
 			ConnectionUtils.saida.writeObject(requisicao);
@@ -282,6 +306,7 @@ public class ViewCentralController implements Initializable {
 
 	public void recebeMensagem(Vector<?> requisicao) {
 		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
+		atualizaVboxUsuariosLogados(mensagemRecebida, mensagemRecebida.getRemetente());
 		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
 			colocaBalaoConversa(mensagemRecebida, 1);
 		}

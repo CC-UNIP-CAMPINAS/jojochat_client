@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -14,21 +16,16 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="872.0" stylesheets="@css/viewCentral.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewCentralController">
    <children>
-      <ScrollPane fx:id="scrollPaneUser" hbarPolicy="NEVER" layoutX="5.0" layoutY="90.0" pannable="true" prefHeight="482.0" prefWidth="303.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="-1.0" AnchorPane.topAnchor="90.0">
-         <content>
-            <VBox fx:id="vbUsuariosLogadas" onMouseClicked="#abreConversa" />
-         </content>
-      </ScrollPane>
-      <AnchorPane fx:id="apCentral2" layoutX="301.0" layoutY="4.0" minHeight="0.0" minWidth="0.0" prefHeight="563.0" prefWidth="572.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="apCentral2" layoutX="312.0" layoutY="4.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="312.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <BorderPane fx:id="bpCentral" layoutX="1.0" layoutY="1.0" maxHeight="600.0" maxWidth="900.0" prefHeight="570.0" prefWidth="572.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <center>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <AnchorPane prefHeight="568.0" prefWidth="532.0" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </children>
       </AnchorPane>
-  <AnchorPane fx:id="apCentral" layoutX="301.0" minHeight="0.0" minWidth="0.0" prefHeight="563.0" prefWidth="572.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="301.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+  <AnchorPane fx:id="apCentral" layoutX="313.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="313.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane fx:id="apCentralInf" layoutY="269.0" prefHeight="61.0" prefWidth="570.0" style="-fx-background-color: #fcfcff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <padding>
@@ -76,12 +73,13 @@
                   <VBox fx:id="vbMensagem" spacing="15.0">
                      <padding>
                         <Insets bottom="20.0" top="20.0" />
-                     </padding></VBox>
+                     </padding>
+                  </VBox>
                </content>
             </ScrollPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="apLeftSup" prefHeight="47.0" prefWidth="301.0" style="-fx-background-color: #fcfcff;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="apLeftSup" prefHeight="47.0" prefWidth="312.0" style="-fx-background-color: #fcfcff;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="lbUser" layoutX="63.0" layoutY="9.0" prefHeight="30.0" prefWidth="231.0" text="Leonardo Petta">
                <font>
@@ -95,6 +93,55 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <TextField fx:id="tfPesquisa" layoutY="46.0" prefHeight="45.0" prefWidth="302.0" promptText="Pesquisar conversa" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="46.0" />
+      <TextField fx:id="tfPesquisa" layoutY="46.0" prefHeight="45.0" prefWidth="312.0" promptText="Pesquisar conversa" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="46.0" />
+      <TabPane fx:id="tabPaneConversas" layoutX="-6.0" layoutY="91.0" prefHeight="479.0" prefWidth="317.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-6.0" AnchorPane.topAnchor="91.0">
+        <tabs>
+          <Tab fx:id="tabConversasSalvas">
+               <content>
+                  <ScrollPane fx:id="scrollPaneUser" hbarPolicy="NEVER" pannable="true" prefHeight="409.0" prefWidth="283.0">
+                     <content>
+                        <VBox fx:id="vbConversas" onMouseClicked="#abreConversa" />
+                     </content>
+                  </ScrollPane>
+               </content>
+               <graphic>
+                  <ImageView fitHeight="52.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../model/img/icons8-messaging-60.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Tab>
+          <Tab fx:id="tabNovasConversas">
+            <content>
+              <AnchorPane fx:id="acTabNovasConversas" minHeight="0.0" minWidth="0.0" prefHeight="313.0" prefWidth="317.0">
+                     <children>
+                        <ScrollPane fx:id="scrollPaneUser" hbarPolicy="NEVER" layoutX="2.0" layoutY="45.0" pannable="true" prefHeight="367.0" prefWidth="317.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="44.0">
+                           <content>
+                              <VBox fx:id="vbUsuariosLogadas" onMouseClicked="#abreConversa">
+                                 <children>
+                                    <fx:include source="ViewUserChat.fxml" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <Label layoutX="98.0" layoutY="8.0" text="Contatos">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+            </content>
+               <graphic>
+                  <ImageView fitHeight="52.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../model/img/icons8-copybook-60.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
