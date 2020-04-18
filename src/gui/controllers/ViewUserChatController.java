@@ -17,8 +17,8 @@ import utils.ConnectionUtils;
 
 public class ViewUserChatController implements Initializable {
 	
-	public Usuario usuario = null;
-	public Conversa conversa = null;
+	public Usuario usuario;
+	public Conversa conversa;
 	
 	@FXML
 	private AnchorPane apUserChat;
@@ -63,8 +63,9 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void clicado() {
+		ViewCentralController.associaConversaComUsuario();
 		ViewCentralController.setUserParaConversar(usuario, conversa);
-		requisitaHistoricoConversa();
+		requisitaHistoricoConversa();		
 	}
 	
 	public void requisitaHistoricoConversa() {
@@ -81,7 +82,24 @@ public class ViewUserChatController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ViewUserChatController other = (ViewUserChatController) obj;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		return true;
+	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		

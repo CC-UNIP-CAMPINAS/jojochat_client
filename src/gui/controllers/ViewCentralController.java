@@ -42,7 +42,8 @@ public class ViewCentralController implements Initializable {
 
 	static Vector<Usuario> usuariosAtivos = new Vector<>();
 	static Vector<ViewUserChatController> chatsAtivos = new Vector<>();
-
+	static Vector<ViewUserChatController> chatsNaoAtivos = new Vector<>();
+	
 	@FXML
 	private ScrollPane scrollPaneUser;
 
@@ -173,6 +174,7 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbUsuariosLogadas.getChildren().clear();
+				chatsNaoAtivos.clear();
 				for (Usuario usuarios : usuariosAtivos) {
 					if (!usuarios.equals(user)) {
 						FXMLLoader userChatLoader;
@@ -181,6 +183,7 @@ public class ViewCentralController implements Initializable {
 							Parent userChatParent = (Parent) userChatLoader.load();
 							ViewUserChatController controlador = userChatLoader.getController();
 							controlador.setaUsuario(usuarios);
+							chatsNaoAtivos.add(controlador);
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -316,6 +319,16 @@ public class ViewCentralController implements Initializable {
 			ConnectionUtils.saida.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static void associaConversaComUsuario() {
+		for (ViewUserChatController chatNaoAtivo : chatsNaoAtivos) {
+			for (ViewUserChatController chatAtivo : chatsAtivos) {
+				if(chatAtivo.equals(chatNaoAtivo)) {
+					chatNaoAtivo.setaConversa(chatAtivo.conversa);
+				}
+			}
 		}
 	}
 	
