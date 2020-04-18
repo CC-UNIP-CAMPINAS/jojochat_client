@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.entities.Conversa;
 import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.AlertUtils;
@@ -36,6 +37,7 @@ public class ViewCentralController implements Initializable {
 	Socket conexao;
 	private static Usuario user;
 	private static Usuario userParaConversar;
+	private static Conversa conversaAtual;
 	public static AnchorPane apCentralStatic;
 
 	static Vector<Usuario> usuariosAtivos = new Vector<>();
@@ -106,10 +108,10 @@ public class ViewCentralController implements Initializable {
 		return userParaConversar;
 	}
 
-	public static void setUserParaConversar(Usuario userParaConversar) {
+	public static void setUserParaConversar(Usuario userParaConversar, Conversa conversa) {
 		ViewCentralController.userParaConversar = userParaConversar;
+		ViewCentralController.conversaAtual = conversa;
 		ViewCentralController.apCentralStatic.setVisible(true);
-		
 	}
 
 	// #################Associação de componentes Statics################# //
@@ -133,7 +135,7 @@ public class ViewCentralController implements Initializable {
 		return null;
 	}
 	
-	public void atualizaVboxUsuariosLogados(Mensagem mensagem, Usuario usuario) {
+	public void atualizaVboxConversa(Mensagem mensagem, Usuario usuario) {
 		ViewUserChatController userChat = buscaUsuarioChat(usuario);
 		Platform.runLater(new Runnable() {
 			@Override
@@ -171,7 +173,6 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbUsuariosLogadas.getChildren().clear();
-				chatsAtivos.clear();
 				for (Usuario usuarios : usuariosAtivos) {
 					if (!usuarios.equals(user)) {
 						FXMLLoader userChatLoader;
@@ -180,11 +181,37 @@ public class ViewCentralController implements Initializable {
 							Parent userChatParent = (Parent) userChatLoader.load();
 							ViewUserChatController controlador = userChatLoader.getController();
 							controlador.setaUsuario(usuarios);
-							chatsAtivos.add(controlador);
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
+					}
+				}
+			}
+		});
+	}
+	
+	public void carregaVboxConversas(Vector<Conversa> conversas) throws IOException {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				vbConversas.getChildren().clear();
+				chatsAtivos.clear();
+				for (Conversa conversa : conversas) {
+					FXMLLoader userChatLoader;
+					try {
+						userChatLoader = new FXMLLoader(getClass().getResource("/gui/views/ViewUserChat.fxml"));
+						Parent userChatParent = (Parent) userChatLoader.load();
+						
+						ViewUserChatController controlador = userChatLoader.getController();
+						controlador.setaUsuario(conversa.getParticipante2());
+						controlador.setaMensagem(conversa.getMensagem());
+						controlador.setaConversa(conversa);
+						
+						chatsAtivos.add(controlador);
+						vbConversas.getChildren().add(userChatParent);
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -279,6 +306,19 @@ public class ViewCentralController implements Initializable {
 		return null;
 	}
 	
+	private void requisitaConversas() {
+		Vector<Object> requisicao = new Vector<>();
+		requisicao.add("conversas");
+		requisicao.add(user);
+		
+		try {
+			ConnectionUtils.saida.writeObject(requisicao);
+			ConnectionUtils.saida.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// #################Ações de Componentes################# //
 
 	public void enviaMensagem() {
@@ -287,14 +327,15 @@ public class ViewCentralController implements Initializable {
 		taEscritura.clear();
 
 		Vector<Object> requisicao = new Vector<>();
+		
 		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
+		
 		
 		requisicao.add("mensagem");	
 		requisicao.add(mensagemParaEnvio);
+		requisicao.add(conversaAtual);
 		
 		colocaBalaoConversa(mensagemParaEnvio, 2);
-		
-		atualizaVboxUsuariosLogados(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
 
 		try {
 			ConnectionUtils.saida.writeObject(requisicao);
@@ -302,17 +343,23 @@ public class ViewCentralController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(conversaAtual == null) {
+			requisitaConversas();
+		}
+		else {
+			atualizaVboxConversa(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
+		}
 	}
 
 	public void recebeMensagem(Vector<?> requisicao) {
 		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
-		atualizaVboxUsuariosLogados(mensagemRecebida, mensagemRecebida.getRemetente());
 		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
 			colocaBalaoConversa(mensagemRecebida, 1);
 		}
 		else {
 			AlertUtils.showNotificacaoErroMensagem(mensagemRecebida);
-		}		
+		}	
+		requisitaConversas();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -320,21 +367,29 @@ public class ViewCentralController implements Initializable {
 		limpaConversa();
 		Vector<Mensagem>  historicoMensagens = (Vector<Mensagem>)requisicao.get(1);
 		
-		LocalDateTime dataTeporaria = historicoMensagens.firstElement().getDateTime();
-		colocaBalaoConversa(historicoMensagens.firstElement(), 3);
-		
-		for (Mensagem mensagemHistorico : historicoMensagens) {
-			if(mensagemHistorico.getDateTime().toLocalDate().isAfter(dataTeporaria.toLocalDate())) {
-				dataTeporaria = mensagemHistorico.getDateTime();
-				colocaBalaoConversa(mensagemHistorico, 3);
-			}
-			if(mensagemHistorico.getRemetente().equals(user)) {
-				colocaBalaoConversa(mensagemHistorico, 2);
-			}
-			else {
-				colocaBalaoConversa(mensagemHistorico, 1);
+		if(!historicoMensagens.isEmpty()) {
+			LocalDateTime datamTeporaria = historicoMensagens.firstElement().getDateTime();
+			colocaBalaoConversa(historicoMensagens.firstElement(), 3);
+			
+			for (Mensagem mensagemHistorico : historicoMensagens) {
+				if(mensagemHistorico.getDateTime().toLocalDate().isAfter(datamTeporaria.toLocalDate())) {
+					datamTeporaria = mensagemHistorico.getDateTime();
+					colocaBalaoConversa(mensagemHistorico, 3);
+				}
+				if(mensagemHistorico.getRemetente().equals(user)) {
+					colocaBalaoConversa(mensagemHistorico, 2);
+				}
+				else {
+					colocaBalaoConversa(mensagemHistorico, 1);
+				}	
 			}	
-		}	
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void recebeConversas(Vector<?> requisicao) throws IOException {
+		Vector<Conversa> conversas = (Vector<Conversa>)requisicao.get(1);
+		carregaVboxConversas(conversas);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -356,6 +411,7 @@ public class ViewCentralController implements Initializable {
 		lbUser.setText(user.getNomeDeExibicao());
 		
 		associaComponentesStaticos();
+		requisitaConversas();
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
@@ -391,13 +447,15 @@ public class ViewCentralController implements Initializable {
 						case "broadcast":
 							recebeBroadcast(requisicao);
 							break;
-
 						case "mensagem":
 							recebeMensagem(requisicao);
 							break;
 						case "historico":
 							recebeHistoricoMensagem(requisicao);
-							break;	
+							break;
+						case "conversas":
+							recebeConversas(requisicao);
+							break;
 						default:
 							break;
 						}

@@ -9,13 +9,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import model.entities.Conversa;
 import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.ConnectionUtils;
 
 public class ViewUserChatController implements Initializable {
 	
-	public Usuario usuario;
+	public Usuario usuario = null;
+	public Conversa conversa = null;
 	
 	@FXML
 	private AnchorPane apUserChat;
@@ -26,9 +29,20 @@ public class ViewUserChatController implements Initializable {
 	@FXML
 	private Label lbMensagem;
 	
+	@FXML
+    private Circle circuloNumeroMensagens;
+
+    @FXML
+    private Label lbNumeroMensagens;
+
+	
 	public void setaUsuario(Usuario usuario) {
 		this.usuario = usuario;
 		lbUser.setText(usuario.getNomeDeExibicao());
+	}
+	
+	public void setaConversa(Conversa conversa) {
+		this.conversa = conversa;
 	}
 	
 	public void setaMensagem(Mensagem mensagem) {
@@ -49,7 +63,7 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void clicado() {
-		ViewCentralController.setUserParaConversar(usuario);
+		ViewCentralController.setUserParaConversar(usuario, conversa);
 		requisitaHistoricoConversa();
 	}
 	

@@ -55,7 +55,7 @@ public class Main extends Application {
                     return new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
-                        	conexao = new ConnectionUtils("10.0.10.100", 12345);
+                        	conexao = new ConnectionUtils("localhost", 12345);
                         	ConnectionUtils.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
                         	ConnectionUtils.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
                            /* Socket cliente = new Socket("127.0.0.1", 12345);
