@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import model.entities.Colecao;
 import model.entities.Conversa;
 import model.entities.Mensagem;
 import model.entities.Usuario;
@@ -19,6 +20,7 @@ public class ViewUserChatController implements Initializable {
 	
 	public Usuario usuario;
 	public Conversa conversa;
+	private int numeroMensagens = 0;
 	
 	@FXML
 	private AnchorPane apUserChat;
@@ -47,6 +49,8 @@ public class ViewUserChatController implements Initializable {
 	
 	public void setaMensagem(Mensagem mensagem) {
 		lbMensagem.setText(mensagem.getMensagem());
+		//aumentaNumeroMensagens();
+		
 	}
 	
 	public String pegaNome() {
@@ -63,10 +67,12 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void clicado() {
-		ViewCentralController.associaConversaComUsuario();
+		Colecao.associaConversaComChat();
 		ViewCentralController.setUserParaConversar(usuario, conversa);
-		requisitaHistoricoConversa();		
+		requisitaHistoricoConversa();
+		//zeraNumeroMensagens();
 	}
+	
 	
 	public void requisitaHistoricoConversa() {
 		Vector<Object> requisicao = new Vector<>();
@@ -98,6 +104,22 @@ public class ViewUserChatController implements Initializable {
 		} else if (!usuario.equals(other.usuario))
 			return false;
 		return true;
+	}
+	
+	public void aumentaNumeroMensagens() {
+		numeroMensagens = Integer.parseInt(lbNumeroMensagens.getText());
+		numeroMensagens++;
+		lbNumeroMensagens.setVisible(true);
+		circuloNumeroMensagens.setVisible(true);
+		lbNumeroMensagens.setText(""+numeroMensagens);
+		
+	}
+	
+	public void zeraNumeroMensagens() {
+		lbNumeroMensagens.setText("0");
+		lbNumeroMensagens.setVisible(false);
+		circuloNumeroMensagens.setVisible(false);
+		
 	}
 
 	@Override

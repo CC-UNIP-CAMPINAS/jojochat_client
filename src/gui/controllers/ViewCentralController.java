@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.entities.Colecao;
 import model.entities.Conversa;
 import model.entities.Mensagem;
 import model.entities.Usuario;
@@ -40,9 +41,6 @@ public class ViewCentralController implements Initializable {
 	private static Conversa conversaAtual;
 	public static AnchorPane apCentralStatic;
 
-	static Vector<Usuario> usuariosAtivos = new Vector<>();
-	static Vector<ViewUserChatController> chatsAtivos = new Vector<>();
-	static Vector<ViewUserChatController> chatsNaoAtivos = new Vector<>();
 	
 	@FXML
 	private ScrollPane scrollPaneUser;
@@ -128,11 +126,13 @@ public class ViewCentralController implements Initializable {
 	}
 	
 	public ViewUserChatController buscaUsuarioChat(Usuario usuario) {
-		for (ViewUserChatController viewUserChatController : chatsAtivos) {
-			if(usuario.equals(viewUserChatController.usuario)) {
-				return viewUserChatController;
+		if(userParaConversar != null) {
+			for (ViewUserChatController viewUserChatController : Colecao.chatsAtivos) {
+				if(usuario.equals(viewUserChatController.usuario)) {
+					return viewUserChatController;
+				}
 			}
-		}
+		}	
 		return null;
 	}
 	
@@ -174,8 +174,8 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbUsuariosLogadas.getChildren().clear();
-				chatsNaoAtivos.clear();
-				for (Usuario usuarios : usuariosAtivos) {
+				Colecao.chatsNaoAtivos.clear();
+				for (Usuario usuarios : Colecao.usuariosAtivos) {
 					if (!usuarios.equals(user)) {
 						FXMLLoader userChatLoader;
 						try {
@@ -183,7 +183,7 @@ public class ViewCentralController implements Initializable {
 							Parent userChatParent = (Parent) userChatLoader.load();
 							ViewUserChatController controlador = userChatLoader.getController();
 							controlador.setaUsuario(usuarios);
-							chatsNaoAtivos.add(controlador);
+							Colecao.chatsNaoAtivos.add(controlador);
 							vbUsuariosLogadas.getChildren().add(userChatParent);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -199,7 +199,7 @@ public class ViewCentralController implements Initializable {
 			@Override
 			public void run() {
 				vbConversas.getChildren().clear();
-				chatsAtivos.clear();
+				Colecao.chatsAtivos.clear();
 				for (Conversa conversa : conversas) {
 					FXMLLoader userChatLoader;
 					try {
@@ -211,12 +211,18 @@ public class ViewCentralController implements Initializable {
 						controlador.setaMensagem(conversa.getMensagem());
 						controlador.setaConversa(conversa);
 						
-						chatsAtivos.add(controlador);
+						Colecao.chatsAtivos.add(controlador);
 						vbConversas.getChildren().add(userChatParent);
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
+				Colecao.associaConversaComChat();
+				ViewUserChatController userChat = buscaUsuarioChat(userParaConversar);
+				if(userChat != null && userParaConversar != null) {
+					conversaAtual = userChat.conversa;
+				}								
 			}
 		});
 	}
@@ -322,21 +328,12 @@ public class ViewCentralController implements Initializable {
 		}
 	}
 	
-	public static void associaConversaComUsuario() {
-		for (ViewUserChatController chatNaoAtivo : chatsNaoAtivos) {
-			for (ViewUserChatController chatAtivo : chatsAtivos) {
-				if(chatAtivo.equals(chatNaoAtivo)) {
-					chatNaoAtivo.setaConversa(chatAtivo.conversa);
-				}
-			}
-		}
-	}
-	
 	// #################Ações de Componentes################# //
 
 	public void enviaMensagem() {
 		LocalDateTime horario = LocalDateTime.now();
 		String textoDaMensagem = taEscritura.getText();
+		textoDaMensagem += new String(Character.toChars(0x1F349));
 		taEscritura.clear();
 
 		Vector<Object> requisicao = new Vector<>();
@@ -407,15 +404,15 @@ public class ViewCentralController implements Initializable {
 
 	@SuppressWarnings("unchecked")
 	public void recebeBroadcast(Vector<?> requisicao) throws IOException {
-		for (Usuario usuario : usuariosAtivos) {
+		for (Usuario usuario : Colecao.usuariosAtivos) {
 			if (!((Vector<Usuario>) requisicao.get(1)).contains(usuario)) {
 				AlertUtils.showNotificacaoLogin(false, usuario.getUsuario());
 			}
 		}
-		ViewCentralController.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
+		Colecao.usuariosAtivos = (Vector<Usuario>) requisicao.get(1);
 		carregaVboxUsuariosLogados();
-		if (!ViewCentralController.usuariosAtivos.lastElement().equals(user)) {
-			AlertUtils.showNotificacaoLogin(true, ViewCentralController.usuariosAtivos.lastElement().getUsuario());
+		if (!Colecao.usuariosAtivos.lastElement().equals(user)) {
+			AlertUtils.showNotificacaoLogin(true, Colecao.usuariosAtivos.lastElement().getUsuario());
 		}
 	}
 

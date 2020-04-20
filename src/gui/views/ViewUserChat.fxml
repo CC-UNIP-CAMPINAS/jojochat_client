@@ -14,8 +14,8 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Circle fx:id="circuloNumeroMensagens" fill="#06d755" layoutX="282.0" layoutY="42.0" radius="10.0" stroke="#06d755" strokeType="INSIDE" />
-      <Label fx:id="lbNumeroMensagens" layoutX="278.0" layoutY="34.0" text="1" textFill="WHITE">
+      <Circle fx:id="circuloNumeroMensagens" fill="#06d755" layoutX="282.0" layoutY="42.0" radius="10.0" stroke="#06d755" strokeType="INSIDE" visible="false" />
+      <Label fx:id="lbNumeroMensagens" layoutX="278.0" layoutY="34.0" text="0" textFill="WHITE" visible="false">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
