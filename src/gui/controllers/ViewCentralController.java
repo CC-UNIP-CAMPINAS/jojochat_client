@@ -33,6 +33,7 @@ import model.entities.Usuario;
 import utils.AlertUtils;
 import utils.ConnectionUtils;
 import utils.ConversorDataUtils;
+import utils.FileUtils;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
@@ -330,6 +331,10 @@ public class ViewCentralController implements Initializable {
 	
 	// #################Ações de Componentes################# //
 
+	public void enviaArquivo() {
+		System.out.println(FileUtils.mostraSeletorArquivos(Main.primaryStage));
+	}
+	
 	public void enviaMensagem() {
 		LocalDateTime horario = LocalDateTime.now();
 		String textoDaMensagem = taEscritura.getText();

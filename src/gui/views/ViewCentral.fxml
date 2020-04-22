@@ -25,14 +25,14 @@
             </BorderPane>
          </children>
       </AnchorPane>
-  <AnchorPane fx:id="apCentral" layoutX="313.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="313.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+  <AnchorPane fx:id="apCentral" layoutX="313.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="313.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane fx:id="apCentralInf" layoutY="269.0" prefHeight="61.0" prefWidth="570.0" style="-fx-background-color: #fcfcff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <padding>
                   <Insets top="10.0" />
                </padding>
                <children>
-                  <ImageView fx:id="btArquivo" fitHeight="35.0" fitWidth="32.0" layoutX="15.0" layoutY="16.0" rotate="3.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="523.0">
+                  <ImageView fx:id="btArquivo" fitHeight="35.0" fitWidth="32.0" layoutX="15.0" layoutY="16.0" onMouseClicked="#enviaArquivo" rotate="3.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="523.0">
                      <image>
                         <Image url="@../../model/img/icons8-attach-60.png" />
                      </image>

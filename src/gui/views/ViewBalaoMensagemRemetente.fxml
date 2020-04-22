@@ -11,7 +11,10 @@
       <Polyline fx:id="triBalao" fill="#accbe8" layoutX="461.0" layoutY="40.0" points="0.0, -40.0, 32.0, -40.0, 0.0, -12.0, 0.0, -40.0" stroke="#accbe8" strokeType="INSIDE" AnchorPane.rightAnchor="-16.0" />
       <AnchorPane fx:id="apInterno" layoutX="1.0">
          <children>
-            <Label fx:id="lbMensagem" layoutX="13.0" layoutY="10.0" maxWidth="440.0" textFill="#393737" wrapText="true" />
+            <Label fx:id="lbMensagem" layoutX="13.0" layoutY="10.0" maxWidth="440.0" textFill="#393737" wrapText="true">
+               <font>
+                  <Font name="OpenSansEmoji" size="13.0" />
+               </font></Label>
             <Label fx:id="lbHorario" layoutX="242.0" layoutY="5.0" textFill="#727272" AnchorPane.bottomAnchor="-4.0" AnchorPane.rightAnchor="-22.0">
                <font>
                   <Font size="10.0" />
