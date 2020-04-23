@@ -1,7 +1,38 @@
-#acCentral{
-	-fx-background-image: url("../../../model/img/dasad.JPG");
-	-fx-background-position: center;
-    -fx-background-repeat: no-repeat;
-   -fx-background-size: 100%;
+
+
+#acInterno{
+	-fx-background-color: #292e37;
+}
+
+#acPrincipal{
+	-fx-background-color: #292e37;
 	
+}
+
+#acCentral, #imgArquivo, #lbNomeArquivo, #lbTamanhoArquivo, #lbComentario{
+	-fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#tfComentario{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#btCancelar{
+    -fx-background-color: #FF5F5F;
+	-fx-background-radius: 5em;
+	-fx-border-radius: 5em;
+    -fx-border-color:  #e1e1e1;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#btEnviar{
+    -fx-background-color: #accbe8;
+	-fx-background-radius: 5em;
+	-fx-border-radius: 5em;
+    -fx-border-color:  #e1e1e1;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }

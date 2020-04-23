@@ -22,7 +22,7 @@
          <children>
             <ImageView fitHeight="163.0" fitWidth="199.0" layoutX="25.0" layoutY="76.0">
                <image>
-                  <Image url="@../../../../../../../Desktop/Imgs/Sema.png" />
+                  <Image url="@../../model/img/Sema.png" />
                </image>
             </ImageView>
             <JFXSpinner fx:id="piCarregando" layoutX="99.0" layoutY="250.0" visible="false" />
