@@ -9,8 +9,10 @@ import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
+import gui.controllers.ViewCentralController;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.entities.Arquivo;
 
 public class FileUtils {
 	final static FileChooser fileChooser = new FileChooser();
@@ -66,15 +68,17 @@ public class FileUtils {
 	}
 	
 	@SuppressWarnings("resource")
-	public static void gravaArquivo(File arquivo, String destino) throws IOException{
+	public static void copiaArquivo(File arquivo, String destino, LocalDateTime horario) throws IOException{
 		criaDiretorio(destino);
 		FileChannel sourceChannel = null;
 	    FileChannel destinationChannel = null;
-	    destino += File.separatorChar+"["+LocalDateTime.now()+"] - "+arquivo.getName();
+	    destino += File.separatorChar+"["+horario+"] - "+arquivo.getName();
 	    try {
 	        sourceChannel = new FileInputStream(arquivo).getChannel();
 	        destinationChannel = new FileOutputStream(destino).getChannel();
 	        sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
+	        
+	        ViewCentralController.setArquivoParaEnvio(new File(destino));
 	    } catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
@@ -88,11 +92,44 @@ public class FileUtils {
 	public static boolean criaDiretorio(String caminho) {
 		File diretorio = new File(caminho);
 		if(!diretorio.exists()) {
-			diretorio.mkdir();
+			diretorio.mkdirs();
 			return false;
 		}
 		else {
 			return true;
 		}
+	}
+	
+	public static boolean verificaArquivo(File arquivo) {
+		if(arquivo.exists()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public static byte[] fileToBytes(File arquivo) throws IOException {
+		FileInputStream fis;
+        try {
+        	byte[] bFile = new byte[(int) arquivo.length()];
+			fis = new FileInputStream(arquivo);
+			fis.read(bFile);
+	        fis.close();
+	        return bFile;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String gravaArquivo(Arquivo arquivo, String destino) throws IOException{
+		criaDiretorio(destino);
+	    destino += File.separatorChar+arquivo.getLocalizacao().getName();
+	    FileOutputStream fos = new FileOutputStream(destino);
+        fos.write(arquivo.getConteudo());
+        fos.close();
+        return destino;
 	}
 }

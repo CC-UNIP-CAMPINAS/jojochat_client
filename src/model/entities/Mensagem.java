@@ -13,6 +13,7 @@ public class Mensagem implements Serializable, Comparable<Mensagem>{
 	private Usuario remetente;
 	private Usuario destinatario;
 	private LocalDateTime dateTime;
+	private Arquivo arquivo = null;
 	
 	
 	public Mensagem(String mensagem, Usuario remetente, Usuario destinatario, LocalDateTime dateTime) {
@@ -20,6 +21,14 @@ public class Mensagem implements Serializable, Comparable<Mensagem>{
 		this.remetente = remetente;
 		this.destinatario = destinatario;
 		this.dateTime = dateTime;
+	}
+	
+	public Mensagem(String mensagem, Usuario remetente, Usuario destinatario, LocalDateTime dateTime, Arquivo arquivo) {
+		this.mensagem = mensagem;
+		this.remetente = remetente;
+		this.destinatario = destinatario;
+		this.dateTime = dateTime;
+		this.setArquivo(arquivo);
 	}
 
 	public String getMensagem() {
@@ -52,6 +61,14 @@ public class Mensagem implements Serializable, Comparable<Mensagem>{
 	
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
+	}
+
+	public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.entities.Arquivo;
 import model.entities.Colecao;
 import model.entities.Conversa;
 import model.entities.Mensagem;
@@ -37,6 +38,7 @@ import utils.AlertUtils;
 import utils.ConnectionUtils;
 import utils.ConversorDataUtils;
 import utils.FileUtils;
+import utils.IdentificadorSoUtils;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
@@ -181,7 +183,7 @@ public class ViewCentralController implements Initializable {
 					vbMensagem.getChildren().add(criaBalaoDeMensagem(conversa, opcao));
 				}
 				if(opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO) || opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
-					vbMensagem.getChildren().add(criaBalaoDeArquivoMensagem(conversa, arquivoParaEnvio, opcao));
+					vbMensagem.getChildren().add(criaBalaoDeArquivoMensagem(conversa, opcao));
 				}
 			}
 		});
@@ -305,16 +307,14 @@ public class ViewCentralController implements Initializable {
 		return null;
 	}
 	
-	public HBox criaBalaoDeArquivoMensagem(Mensagem conversa, File arquivo, Baloes opcao) {
-		String horarioFormatado = ConversorDataUtils.getTimeToString(conversa.getDateTime());
-		
-		if (opcao.equals(Baloes.BALAO_DESTINATARIO)) {
+	public HBox criaBalaoDeArquivoMensagem(Mensagem conversa, Baloes opcao) {
+		if (opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
 			FXMLLoader balaoArquivoDestinatario;
 			try {
 				balaoArquivoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoArquivoDestinatario.fxml"));
 				Parent parentBalaoArquivoDestinatario = (Parent) balaoArquivoDestinatario.load();
 				ViewBalaoArquivoDestinatarioController controlador = balaoArquivoDestinatario.getController();
-				//controlador.setaMensagem(conversa.getMensagem(), horarioFormatado);
+				controlador.setaInformacoes(conversa);
 
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
@@ -335,13 +335,13 @@ public class ViewCentralController implements Initializable {
 			}
 		} 
 		
-		if(opcao.equals(Baloes.BALAO_REMETENTE)) {
-			FXMLLoader balaoRemetente;
+		if(opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
+			FXMLLoader balaoArquivoRemetente;
 			try {
-				balaoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemRemetente.fxml"));
-				Parent parentBalaoRemetente = (Parent) balaoRemetente.load();
-				ViewBalaoMensagemRemetenteController controlador = balaoRemetente.getController();
-				controlador.setaMensagem(conversa.getMensagem(), horarioFormatado);
+				balaoArquivoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoArquivoRemetente.fxml"));
+				Parent parentBalaoArquivoRemetente = (Parent) balaoArquivoRemetente.load();
+				ViewBalaoArquivoRemetenteController controlador = balaoArquivoRemetente.getController();
+				controlador.setaInformacoes(conversa);
 
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
@@ -353,7 +353,7 @@ public class ViewCentralController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						hboxMensagem.getChildren().add(parentBalaoRemetente);
+						hboxMensagem.getChildren().add(parentBalaoArquivoRemetente);
 					}
 				});
 				return hboxMensagem;
@@ -410,35 +410,32 @@ public class ViewCentralController implements Initializable {
 	
 	// #################Ações de Componentes################# //
 
-	public void selecionaArquivo() {
+	public void selecionaArquivo(){
 		arquivoParaEnvio = FileUtils.mostraSeletorArquivos(Main.primaryStage);
 		String textoDaMensagem = "";
+		LocalDateTime horario = LocalDateTime.now();
 		if(arquivoParaEnvio != null) {
 			AlertUtils chamador = new AlertUtils();
-			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(arquivoParaEnvio);	
+			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(arquivoParaEnvio, horario);	
 		}
 		
-		LocalDateTime horario = LocalDateTime.now();
-
-		Vector<Object> requisicao = new Vector<>();
-		
-		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
-		
-		requisicao.add("mensagemComArquivo");	
-		requisicao.add(mensagemParaEnvio);
-		requisicao.add(arquivoParaEnvio);
-		requisicao.add(conversaAtual);
-		
-		System.out.println("Gravado");
-//		try {
-//			ConnectionUtils.saida.writeObject(requisicao);
-//			ConnectionUtils.saida.reset();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_ARQUIVO_REMETENTE);
-		
+		if(arquivoParaEnvio != null) {
+			try {
+				Vector<Object> requisicao = new Vector<>();
+				Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario, new Arquivo(FileUtils.fileToBytes(arquivoParaEnvio), arquivoParaEnvio));
+				
+				requisicao.add("mensagemComArquivo");	
+				requisicao.add(mensagemParaEnvio);
+				requisicao.add(conversaAtual);
+				
+				ConnectionUtils.saida.writeObject(requisicao);
+				ConnectionUtils.saida.reset();
+				
+				colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_ARQUIVO_REMETENTE);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 	
 	public void enviaMensagem() {
@@ -471,13 +468,26 @@ public class ViewCentralController implements Initializable {
 		}
 	}
 
-	public void recebeMensagem(Vector<?> requisicao) {
+	public void recebeMensagem(Vector<?> requisicao, Baloes opcao) throws IOException {
 		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
 		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
-			colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_DESTINATARIO);
+			if(opcao.equals(Baloes.BALAO_DESTINATARIO)) {
+				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_DESTINATARIO);
+			}
+			if(opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
+				String caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+				if (IdentificadorSoUtils.sistema().equals("linux")){
+						caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+				}
+				caminho += File.separatorChar+String.valueOf(mensagemRecebida.getRemetente().getId());
+				
+				caminho = FileUtils.gravaArquivo(mensagemRecebida.getArquivo(), caminho);
+				
+				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_ARQUIVO_DESTINATARIO);
+			}	
 		}
 		else {
-			AlertUtils.showNotificacaoErroMensagem(mensagemRecebida);
+			AlertUtils.showNotificacaoNovaMensagem(mensagemRecebida);
 		}	
 		requisitaConversas();
 	}
@@ -568,7 +578,10 @@ public class ViewCentralController implements Initializable {
 							recebeBroadcast(requisicao);
 							break;
 						case "mensagem":
-							recebeMensagem(requisicao);
+							recebeMensagem(requisicao, Baloes.BALAO_DESTINATARIO);
+							break;
+						case "mensagemComArquivo":
+							recebeMensagem(requisicao, Baloes.BALAO_ARQUIVO_DESTINATARIO);
 							break;
 						case "historico":
 							recebeHistoricoMensagem(requisicao);

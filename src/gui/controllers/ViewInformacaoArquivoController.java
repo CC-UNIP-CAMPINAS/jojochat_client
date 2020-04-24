@@ -3,6 +3,7 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
@@ -22,6 +23,7 @@ public class ViewInformacaoArquivoController implements Initializable {
 
 	private Stage stage;
 	private File arquivo;
+	private LocalDateTime horario;
 	
 	@FXML
 	private AnchorPane acPrincipal;
@@ -60,10 +62,11 @@ public class ViewInformacaoArquivoController implements Initializable {
 		this.stage = stage;
 	}
 
-	public void setInformacoe(File arquivo) {
+	public void setInformacoes(File arquivo, LocalDateTime horario) {
 		lbNomeArquivo.setText(arquivo.getName());
 		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(arquivo));
 		this.arquivo = arquivo;
+		this.horario = horario;
 	}
 
 	public void setImagemDeFundo(File arquivo){
@@ -97,7 +100,7 @@ public class ViewInformacaoArquivoController implements Initializable {
 				caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
 		}
 		caminho += File.separatorChar+String.valueOf(ViewCentralController.getUserParaConversar().getId());
-		FileUtils.gravaArquivo(arquivo, caminho);
+		FileUtils.copiaArquivo(arquivo, caminho, horario);
 	}
 
 	@Override

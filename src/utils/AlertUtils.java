@@ -2,6 +2,7 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import org.controlsfx.control.Notifications;
 
@@ -60,7 +61,21 @@ public class AlertUtils {
 			}
 		});
 	}
-	public static void showNotificacaoErroMensagem(Mensagem mensagem) {
+	
+	public static void showNotificacaoErroArquivoFaltante(File arquivo) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Notifications not = Notifications.create();
+				not.position(Pos.TOP_RIGHT);
+				not.title("Arquivo não encontrado!");
+				not.text("O arquivo: "+arquivo.getName()+" não foi encontrado! Solicite o download!");
+				not.showWarning();
+			}
+		});
+	}
+	
+	public static void showNotificacaoNovaMensagem(Mensagem mensagem) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -86,12 +101,12 @@ public class AlertUtils {
 		});
 	}
 	
-	public String showJanelaConfirmacaoEnvio(File arquivo) {
+	public String showJanelaConfirmacaoEnvio(File arquivo, LocalDateTime horario) {
 		try {
 			FXMLLoader loaderArquivo = new FXMLLoader(getClass().getResource("/gui/views/ViewInformacaoArquivo.fxml"));
 			Parent fxmlArquivo = (Parent) loaderArquivo.load();
 			ViewInformacaoArquivoController controlador = loaderArquivo.getController();
-			controlador.setInformacoe(arquivo);
+			controlador.setInformacoes(arquivo, horario);
 			
 			Scene sceneCentral = new Scene(fxmlArquivo);
 			sceneCentral.setFill(Color.TRANSPARENT);
