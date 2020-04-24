@@ -18,6 +18,7 @@ import model.entities.Mensagem;
 import utils.AlertUtils;
 import utils.ConversorDataUtils;
 import utils.FileUtils;
+import utils.IdentificadorSoUtils;
 
 public class ViewBalaoArquivoRemetenteController implements Initializable {
 
@@ -62,7 +63,29 @@ public class ViewBalaoArquivoRemetenteController implements Initializable {
 		lbMensagem.setText(mensagem.getMensagem());
 		lbHorario.setText(ConversorDataUtils.getTimeToString(mensagem.getDateTime()));
 		
-		verificaArquivo();
+		verificaArquivo(mensagem);
+	}
+	
+	public void verificaArquivo(Mensagem mensagem) {
+		if(FileUtils.verificaArquivo(arquivo)) {
+			spinCarregando.setVisible(false);
+			imgDownload.setVisible(false);
+		}
+		else {
+			String caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+			if (IdentificadorSoUtils.sistema().equals("linux")){
+					caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+			}
+			caminho += File.separatorChar+String.valueOf(mensagem.getDestinatario().getId());
+			mensagem.getArquivo().setLocalizacao(FileUtils.procuraArquivo(caminho, arquivo));
+			if(!mensagem.getArquivo().getLocalizacao().exists()) {
+				imgDownload.setVisible(true);
+				AlertUtils.showNotificacaoErroArquivoFaltante(arquivo);
+			}
+			else {
+				setaInformacoes(mensagem);
+			}
+		}
 	}
 	
 	public boolean verificaArquivo() {

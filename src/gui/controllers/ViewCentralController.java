@@ -498,19 +498,29 @@ public class ViewCentralController implements Initializable {
 		Vector<Mensagem>  historicoMensagens = (Vector<Mensagem>)requisicao.get(1);
 		
 		if(!historicoMensagens.isEmpty()) {
-			LocalDateTime datamTeporaria = historicoMensagens.firstElement().getDateTime();
+			LocalDateTime dataTeporaria = historicoMensagens.firstElement().getDateTime();
 			colocaBalaoConversa(historicoMensagens.firstElement(), Baloes.BALAO_INFORMACAO);
 			
 			for (Mensagem mensagemHistorico : historicoMensagens) {
-				if(mensagemHistorico.getDateTime().toLocalDate().isAfter(datamTeporaria.toLocalDate())) {
-					datamTeporaria = mensagemHistorico.getDateTime();
+				if(mensagemHistorico.getDateTime().toLocalDate().isAfter(dataTeporaria.toLocalDate())) {
+					dataTeporaria = mensagemHistorico.getDateTime();
 					colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_INFORMACAO);
 				}
-				if(mensagemHistorico.getRemetente().equals(user)) {
-					colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_REMETENTE);
+				if(mensagemHistorico.getArquivo() == null) {
+					if(mensagemHistorico.getRemetente().equals(user)) {
+						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_REMETENTE);
+					}
+					else {
+						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_DESTINATARIO);
+					}
 				}
 				else {
-					colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_DESTINATARIO);
+					if(mensagemHistorico.getRemetente().equals(user)) {
+						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_ARQUIVO_REMETENTE);
+					}
+					else {
+						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_ARQUIVO_DESTINATARIO);
+					}
 				}	
 			}	
 		}
