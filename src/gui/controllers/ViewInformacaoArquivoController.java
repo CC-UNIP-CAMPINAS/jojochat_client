@@ -3,7 +3,6 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
@@ -17,13 +16,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import utils.FileUtils;
-import utils.IdentificadorSoUtils;
 
 public class ViewInformacaoArquivoController implements Initializable {
 
 	private Stage stage;
 	private File arquivo;
-	private LocalDateTime horario;
 	
 	@FXML
 	private AnchorPane acPrincipal;
@@ -62,11 +59,10 @@ public class ViewInformacaoArquivoController implements Initializable {
 		this.stage = stage;
 	}
 
-	public void setInformacoes(File arquivo, LocalDateTime horario) {
+	public void setInformacoes(File arquivo) {
 		lbNomeArquivo.setText(arquivo.getName());
 		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(arquivo));
 		this.arquivo = arquivo;
-		this.horario = horario;
 	}
 
 	public void setImagemDeFundo(File arquivo){
@@ -95,12 +91,8 @@ public class ViewInformacaoArquivoController implements Initializable {
 	}
 	
 	public void gravaArquivo() throws IOException {
-		String caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-		if (IdentificadorSoUtils.sistema().equals("linux")){
-				caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-		}
-		caminho += File.separatorChar+String.valueOf(ViewCentralController.getUserParaConversar().getId());
-		FileUtils.copiaArquivo(arquivo, caminho, horario);
+		String caminho = FileUtils.getCaminhoArquivos()+File.separatorChar+String.valueOf(ViewCentralController.getUserParaConversar().getId());
+		FileUtils.copiaArquivo(arquivo, caminho);
 	}
 
 	@Override

@@ -48,9 +48,12 @@ public class ViewUserChatController implements Initializable {
 	}
 	
 	public void setaMensagem(Mensagem mensagem) {
-		lbMensagem.setText(mensagem.getMensagem());
-		//aumentaNumeroMensagens();
-		
+		if(mensagem.getArquivo() != null) {
+			lbMensagem.setText("Arquivo");
+		}
+		else {
+			lbMensagem.setText(mensagem.getMensagem());
+		}
 	}
 	
 	public String pegaNome() {

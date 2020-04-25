@@ -106,7 +106,7 @@ public class AlertUtils {
 			FXMLLoader loaderArquivo = new FXMLLoader(getClass().getResource("/gui/views/ViewInformacaoArquivo.fxml"));
 			Parent fxmlArquivo = (Parent) loaderArquivo.load();
 			ViewInformacaoArquivoController controlador = loaderArquivo.getController();
-			controlador.setInformacoes(arquivo, horario);
+			controlador.setInformacoes(arquivo);
 			
 			Scene sceneCentral = new Scene(fxmlArquivo);
 			sceneCentral.setFill(Color.TRANSPARENT);

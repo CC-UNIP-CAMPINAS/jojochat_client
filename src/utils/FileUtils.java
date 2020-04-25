@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 
 import gui.controllers.ViewCentralController;
 import javafx.stage.FileChooser;
@@ -80,17 +79,26 @@ public class FileUtils {
 	}
 	
 	@SuppressWarnings("resource")
-	public static void copiaArquivo(File arquivo, String destino, LocalDateTime horario) throws IOException{
+	public static void copiaArquivo(File arquivo, String destino) throws IOException{
 		criaDiretorio(destino);
 		FileChannel sourceChannel = null;
 	    FileChannel destinationChannel = null;
-	    destino += File.separatorChar+"["+horario+"] - "+arquivo.getName();
+	    File arquivoTemp = new File(destino+File.separatorChar+arquivo.getName());
+	    if(verificaArquivo(arquivoTemp)) {
+	    	int contador = 1;
+	    	arquivoTemp = new File(destino+File.separatorChar+"("+contador+")"+arquivo.getName());
+	    	while(verificaArquivo(arquivoTemp)) {
+	    		contador++;
+	    		arquivoTemp = new File(destino+File.separatorChar+"("+contador+")"+arquivo.getName());
+	    	}
+	    }
+	    
 	    try {
 	        sourceChannel = new FileInputStream(arquivo).getChannel();
-	        destinationChannel = new FileOutputStream(destino).getChannel();
+	        destinationChannel = new FileOutputStream(arquivoTemp).getChannel();
 	        sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
 	        
-	        ViewCentralController.setArquivoParaEnvio(new File(destino));
+	        ViewCentralController.setArquivoParaEnvio(arquivoTemp);
 	    } catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
@@ -138,10 +146,17 @@ public class FileUtils {
 	
 	public static String gravaArquivo(Arquivo arquivo, String destino) throws IOException{
 		criaDiretorio(destino);
-	    destino += File.separatorChar+arquivo.getLocalizacao().getName();
+	    destino += File.separatorChar+arquivo.getLocalizacaoServidor().getName();
 	    FileOutputStream fos = new FileOutputStream(destino);
         fos.write(arquivo.getConteudo());
         fos.close();
         return destino;
+	}
+	
+	public static String getCaminhoArquivos(){
+		if (IdentificadorSoUtils.sistema().equals("linux")){
+			 return System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+		}
+		return System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
 	}
 }

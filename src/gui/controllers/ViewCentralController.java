@@ -38,7 +38,6 @@ import utils.AlertUtils;
 import utils.ConnectionUtils;
 import utils.ConversorDataUtils;
 import utils.FileUtils;
-import utils.IdentificadorSoUtils;
 
 public class ViewCentralController implements Initializable {
 	Socket conexao;
@@ -314,7 +313,7 @@ public class ViewCentralController implements Initializable {
 				balaoArquivoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoArquivoDestinatario.fxml"));
 				Parent parentBalaoArquivoDestinatario = (Parent) balaoArquivoDestinatario.load();
 				ViewBalaoArquivoDestinatarioController controlador = balaoArquivoDestinatario.getController();
-				controlador.setaInformacoes(conversa);
+				controlador.setaInformacoesIniciais(conversa);
 
 				HBox hboxMensagem = new HBox();
 				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
@@ -475,13 +474,8 @@ public class ViewCentralController implements Initializable {
 				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_DESTINATARIO);
 			}
 			if(opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
-				String caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-				if (IdentificadorSoUtils.sistema().equals("linux")){
-						caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-				}
-				caminho += File.separatorChar+String.valueOf(mensagemRecebida.getRemetente().getId());
-				
-				caminho = FileUtils.gravaArquivo(mensagemRecebida.getArquivo(), caminho);
+//				String caminho = FileUtils.getCaminhoArquivos()+File.separatorChar+String.valueOf(mensagemRecebida.getRemetente().getId());
+//				caminho = FileUtils.gravaArquivo(mensagemRecebida.getArquivo(), caminho);
 				
 				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_ARQUIVO_DESTINATARIO);
 			}	

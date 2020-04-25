@@ -15,14 +15,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polyline;
 import model.entities.Mensagem;
-import utils.AlertUtils;
 import utils.ConversorDataUtils;
 import utils.FileUtils;
-import utils.IdentificadorSoUtils;
 
 public class ViewBalaoArquivoDestinatarioController implements Initializable {
 
-	private File arquivo;
+	private Mensagem mensagem;
 
 	@FXML
 	private AnchorPane apCentral;
@@ -51,61 +49,43 @@ public class ViewBalaoArquivoDestinatarioController implements Initializable {
 	@FXML
 	private JFXSpinner spinCarregando;
 
-	public File getArquivo() {
-		return arquivo;
-	}
-
-	public void setArquivo(File arquivo) {
-		this.arquivo = arquivo;
-	}
-
 	@FXML
 	void fazDownload() {
 
 	}
 
-	public void setaInformacoes(Mensagem mensagem) {
-		this.arquivo = mensagem.getArquivo().getLocalizacao();
-		lbNomeArquivo.setText(arquivo.getName());
-		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(arquivo));
+	public void setaInformacoesIniciais(Mensagem mensagem) {
+		this.mensagem = mensagem;
+		lbNomeArquivo.setText(mensagem.getArquivo().getLocalizacaoServidor().getName());
+		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(mensagem.getArquivo().getLocalizacaoServidor()));
 		lbMensagem.setText(mensagem.getMensagem());
 		lbHorario.setText(ConversorDataUtils.getTimeToString(mensagem.getDateTime()));
 		
-		verificaArquivo(mensagem);
+		verificaArquivo();
 	}
 	
-	public void verificaArquivo(Mensagem mensagem) {
-		if(FileUtils.verificaArquivo(arquivo)) {
-			spinCarregando.setVisible(false);
-			imgDownload.setVisible(false);
-		}
-		else {
-			String caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-			if (IdentificadorSoUtils.sistema().equals("linux")){
-					caminho = System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
-			}
-			caminho += File.separatorChar+String.valueOf(mensagem.getDestinatario().getId());
-			mensagem.getArquivo().setLocalizacao(FileUtils.procuraArquivo(caminho, arquivo));
-			if(!mensagem.getArquivo().getLocalizacao().exists()) {
-				imgDownload.setVisible(true);
-				AlertUtils.showNotificacaoErroArquivoFaltante(arquivo);
-			}
-			else {
-				setaInformacoes(mensagem);
-			}
-		}
+	public void setaInformacoesNovas() {
+		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(mensagem.getArquivo().getLocalizacaoDestinatario()));
 	}
 	
 	public boolean verificaArquivo() {
-		if(FileUtils.verificaArquivo(arquivo)) {
+		if(FileUtils.verificaArquivo(this.mensagem.getArquivo().getLocalizacaoServidor())) {
 			spinCarregando.setVisible(false);
 			imgDownload.setVisible(false);
 			return true;
 		}
 		else {
-			imgDownload.setVisible(true);
-			AlertUtils.showNotificacaoErroArquivoFaltante(arquivo);
-			return false;
+			String caminho = FileUtils.getCaminhoArquivos()+File.separatorChar+String.valueOf(mensagem.getRemetente().getId());
+			mensagem.getArquivo().setLocalizacaoDestinatario(FileUtils.procuraArquivo(caminho, mensagem.getArquivo().getLocalizacaoServidor()));
+			if(!mensagem.getArquivo().getLocalizacaoDestinatario().exists()) {
+				imgDownload.setVisible(true);
+				spinCarregando.setVisible(false);
+				return false;
+			}
+			else {
+				setaInformacoesNovas();
+				return true;
+			}
 		}
 	}
 
@@ -114,7 +94,7 @@ public class ViewBalaoArquivoDestinatarioController implements Initializable {
 			if (Desktop.isDesktopSupported()) {
 				new Thread(() -> {
 					try {
-						Desktop.getDesktop().open(arquivo);
+						Desktop.getDesktop().open(mensagem.getArquivo().getLocalizacaoDestinatario());
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
