@@ -12,6 +12,11 @@
 	
 }
 
+#btEmoji, #btEnviar, #btArquivo{
+	-fx-background-radius: 5em;
+	-fx-border-radius: 5em;
+}
+
 #apCentral, #apCentral2{
 	-fx-background-color: #ebeaed;
 	-fx-background-size: cover;
@@ -73,6 +78,10 @@
 
 .tab:selected{
 	-fx-border-color: transparent transparent #A5C3DF transparent;
+}
+
+.tab:hover{
+	-fx-background-color: #D6D6D6;
 }
 
 #acTabNovasConversas{

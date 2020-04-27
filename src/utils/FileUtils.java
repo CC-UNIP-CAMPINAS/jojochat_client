@@ -40,14 +40,17 @@ public class FileUtils {
 	
 	public static File procuraArquivo(String caminhoBase, File arquivoBuscado) {
 		File caminhoBuscado = new File(caminhoBase);
-		File[] files = caminhoBuscado.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            if(file.getName().equals(arquivoBuscado.getName())) {
-            	return file;
-            }
-        }
-        return arquivoBuscado;
+		if(caminhoBuscado.exists()) {
+			File[] files = caminhoBuscado.listFiles();
+	        for (int i = 0; i < files.length; i++) {
+	            File file = files[i];
+	            if(file.getName().equals(arquivoBuscado.getName())) {
+	            	return file;
+	            }
+	        }
+	        return arquivoBuscado;
+		}
+		return arquivoBuscado;
 	}
 	
 	public static String conversorDeUnidade(File arquivo) {

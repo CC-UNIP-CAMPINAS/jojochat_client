@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -26,33 +27,51 @@
             </BorderPane>
          </children>
       </AnchorPane>
-  <AnchorPane fx:id="apCentral" layoutX="313.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="313.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+  <AnchorPane fx:id="apCentral" layoutX="313.0" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="560.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="313.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="apCentralInf" layoutY="269.0" prefHeight="61.0" prefWidth="570.0" style="-fx-background-color: #fcfcff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <AnchorPane fx:id="apCentralInf" layoutX="-2.0" layoutY="499.0" style="-fx-background-color: #fcfcff;" AnchorPane.bottomAnchor="-0.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="2.0">
                <padding>
                   <Insets top="10.0" />
                </padding>
                <children>
-                  <ImageView fx:id="btArquivo" fitHeight="35.0" fitWidth="32.0" layoutX="15.0" layoutY="16.0" onMouseClicked="#selecionaArquivo" rotate="3.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="523.0">
-                     <image>
-                        <Image url="@../../model/img/icons8-attach-60.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="btEnviar" fitHeight="30.0" fitWidth="34.0" layoutX="521.0" layoutY="21.0" onMouseClicked="#enviaMensagem" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="15.0">
-                     <image>
-                        <Image url="@../../model/img/icons8-email-send-60.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="btEmoji" fitHeight="30.0" fitWidth="31.0" layoutX="481.0" layoutY="21.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="58.0">
-                     <image>
-                        <Image url="@../../model/img/icons8-smiling-60.png" />
-                     </image>
-                  </ImageView>
-                  <TextArea fx:id="taEscritura" layoutX="55.0" layoutY="12.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="421.0" promptText="Digite uma mensagem" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="97.0">
+                  <TextArea fx:id="taEscritura" layoutX="58.0" layoutY="15.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="404.0" promptText="Digite uma mensagem" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="104.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </TextArea>
+                  <JFXButton fx:id="btEnviar" layoutX="507.0" layoutY="12.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#enviaMensagem" prefHeight="40.0" prefWidth="47.0" text=" " AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="5.0">
+                     <graphic>
+                        <ImageView fx:id="imgEnviar" fitHeight="30.0" fitWidth="34.0">
+                           <image>
+                              <Image url="@../../model/img/icons8-email-send-60.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="4.0" right="1.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton fx:id="btEmoji" layoutX="462.0" layoutY="13.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="47.0" text=" " AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="52.0">
+                     <graphic>
+                        <ImageView fx:id="imgEmoji" fitHeight="30.0" fitWidth="31.0">
+                           <image>
+                              <Image url="@../../model/img/icons8-smiling-60.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="btArquivo" layoutX="6.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#selecionaArquivo" prefHeight="45.0" prefWidth="47.0" text=" ">
+                     <graphic>
+                        <ImageView fx:id="ImgArquivo" fitHeight="37.0" fitWidth="34.0">
+                           <image>
+                              <Image url="@../../model/img/icons8-attach-60.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="4.0" right="1.0" />
+                     </padding>
+                  </JFXButton>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="apCentralSup" prefHeight="47.0" prefWidth="570.0" style="-fx-background-color: #fcfcff;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

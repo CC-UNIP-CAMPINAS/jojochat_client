@@ -11,8 +11,11 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import com.jfoenix.controls.JFXButton;
+
 import app.Main;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,10 +24,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -51,58 +59,88 @@ public class ViewCentralController implements Initializable {
 
 	
 	@FXML
-	private ScrollPane scrollPaneUser;
+    private AnchorPane apCentral2;
 
-	@FXML
-	private VBox vbUsuariosLogadas;
-	
-	@FXML
-	private VBox vbConversas;
+    @FXML
+    private BorderPane bpCentral;
 
-	@FXML
-	private AnchorPane apCentral;
+    @FXML
+    private AnchorPane apCentral;
 
-	@FXML
-	private AnchorPane apCentralInf;
+    @FXML
+    private AnchorPane apCentralInf;
 
-	@FXML
-	private ImageView btArquivo;
-	
-	@FXML
-	private Pane paneOpaco;
+    @FXML
+    private TextArea taEscritura;
 
-	@FXML
-	private ImageView btEnviar;
+    @FXML
+    private JFXButton btEnviar;
 
-	@FXML
-	private ImageView btEmoji;
+    @FXML
+    private ImageView imgEnviar;
 
-	@FXML
-	private TextArea taEscritura;
+    @FXML
+    private JFXButton btEmoji;
 
-	@FXML
-	private AnchorPane apCentralSup;
+    @FXML
+    private ImageView imgEmoji;
 
-	@FXML
-	private Label lbUserChamado;
+    @FXML
+    private JFXButton btArquivo;
 
-	@FXML
-	private ImageView imgUserChamado;
+    @FXML
+    private ImageView ImgArquivo;
 
-	@FXML
-	private VBox vbMensagem;
+    @FXML
+    private AnchorPane apCentralSup;
 
-	@FXML
-	private AnchorPane apLeftSup;
+    @FXML
+    private Label lbUserChamado;
 
-	@FXML
-	private Label lbUser;
+    @FXML
+    private ImageView imgUserChamado;
 
-	@FXML
-	private ImageView imgUser;
+    @FXML
+    private ScrollPane scrollPaneMensagens;
 
-	@FXML
-	private TextField tfPesquisa;
+    @FXML
+    private VBox vbMensagem;
+
+    @FXML
+    private AnchorPane apLeftSup;
+
+    @FXML
+    private Label lbUser;
+
+    @FXML
+    private ImageView imgUser;
+
+    @FXML
+    private TextField tfPesquisa;
+
+    @FXML
+    private TabPane tabPaneConversas;
+
+    @FXML
+    private Tab tabConversasSalvas;
+
+    @FXML
+    private ScrollPane scrollPaneUser;
+
+    @FXML
+    private VBox vbConversas;
+
+    @FXML
+    private Tab tabNovasConversas;
+
+    @FXML
+    private AnchorPane acTabNovasConversas;
+
+    @FXML
+    private VBox vbUsuariosLogadas;
+
+    @FXML
+    private Pane paneOpaco;
 
 	// #################Gets/Sets################# //
 
@@ -136,6 +174,22 @@ public class ViewCentralController implements Initializable {
 	}
 	
 	// #################Utilitarios do controlador################# //
+	
+	public void setAcaoComponentes() {
+		taEscritura.setOnKeyPressed(event -> {
+		    if (event.getCode() == KeyCode.ENTER) {
+		        event.consume();//Evita que ele mande o enter no textArea
+		        if (event.isShiftDown()) {
+		        	taEscritura.appendText(System.getProperty("line.separator"));
+		        } else {
+		            if(!taEscritura.getText().isEmpty()){
+		                enviaMensagem();
+		                taEscritura.setText("");
+		            }
+		        }
+		    }
+		});
+	}
 	
 	public void abreConversa() {
 		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
@@ -438,32 +492,31 @@ public class ViewCentralController implements Initializable {
 	}
 	
 	public void enviaMensagem() {
-		LocalDateTime horario = LocalDateTime.now();
-		String textoDaMensagem = taEscritura.getText();
-		taEscritura.clear();
+		if(!taEscritura.getText().isEmpty()) {
+			LocalDateTime horario = LocalDateTime.now();
+			String textoDaMensagem = taEscritura.getText();
+			Vector<Object> requisicao = new Vector<>();
+			
+			Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);	
+			
+			requisicao.add("mensagem");	
+			requisicao.add(mensagemParaEnvio);
+			requisicao.add(conversaAtual);
+			
+			colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_REMETENTE);
 
-		Vector<Object> requisicao = new Vector<>();
-		
-		Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);
-		
-		
-		requisicao.add("mensagem");	
-		requisicao.add(mensagemParaEnvio);
-		requisicao.add(conversaAtual);
-		
-		colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_REMETENTE);
-
-		try {
-			ConnectionUtils.saida.writeObject(requisicao);
-			ConnectionUtils.saida.reset();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(conversaAtual == null) {
-			requisitaConversas();
-		}
-		else {
-			atualizaVboxConversa(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
+			try {
+				ConnectionUtils.saida.writeObject(requisicao);
+				ConnectionUtils.saida.reset();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(conversaAtual == null) {
+				requisitaConversas();
+			}
+			else {
+				atualizaVboxConversa(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
+			}
 		}
 	}
 
@@ -518,6 +571,7 @@ public class ViewCentralController implements Initializable {
 				}	
 			}	
 		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -546,6 +600,9 @@ public class ViewCentralController implements Initializable {
 		
 		associaComponentesStaticos();
 		requisitaConversas();
+		setAcaoComponentes();
+		
+		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
