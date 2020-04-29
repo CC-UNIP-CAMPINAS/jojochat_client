@@ -62,6 +62,35 @@ public class AlertUtils {
 		});
 	}
 	
+	public static void showNotificacaoCadastro(int i) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {		
+				if(i == 1) {
+					Notifications not = Notifications.create();
+					not.position(Pos.CENTER);
+					not.title("Dados incorretos!");
+					not.text("Preencha todos os campos!");
+					not.showWarning();
+				}
+				if (i == 2){
+					Notifications not = Notifications.create();
+					not.position(Pos.CENTER);
+					not.title("Dados duplicados");
+					not.text("Usuário já registrado na base de dados");
+					not.showWarning();
+				}
+				if (i == 3){
+					Notifications not = Notifications.create();
+					not.position(Pos.CENTER);
+					not.title("Cadastro Realizado com sucesso!");
+					not.text("Utilize seus dados para login");
+					not.showConfirm();
+				}
+			}
+		});
+	}
+	
 	public static void showNotificacaoErroArquivoFaltante(File arquivo) {
 		Platform.runLater(new Runnable() {
 			@Override

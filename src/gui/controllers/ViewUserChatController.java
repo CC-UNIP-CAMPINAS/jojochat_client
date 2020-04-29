@@ -5,8 +5,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.jmx.MXNodeAlgorithm;
+import com.sun.javafx.jmx.MXNodeAlgorithmContext;
+import com.sun.javafx.sg.prism.NGNode;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -16,7 +23,7 @@ import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.ConnectionUtils;
 
-public class ViewUserChatController implements Initializable {
+public class ViewUserChatController extends Node implements Initializable {
 	
 	public Usuario usuario;
 	public Conversa conversa;
@@ -60,16 +67,35 @@ public class ViewUserChatController implements Initializable {
 		return lbUser.getText();
 	}
 	
-	public void selecionado() {
-		apUserChat.setStyle("-fx-background-color: #a7a6a8");
+	public void achaChat(ViewUserChatController viewUserChatController) {
+		for(ViewUserChatController ap : Colecao.chatsAtivos) {
+			if(ap.equals(viewUserChatController)) {
+				ap.apUserChat.setStyle("-fx-background-color: #A1A1A1");
+			}
+			else {
+				ap.apUserChat.setStyle(null);
+			}
+		}
+		for(ViewUserChatController ap : Colecao.chatsNaoAtivos) {
+			if(ap.equals(viewUserChatController)) {
+				ap.apUserChat.setStyle("-fx-background-color: #A1A1A1");
+			}
+			else {
+				ap.apUserChat.setStyle(null);
+			}
+		}
 	}
 	
-	public void deSeleciona() {
-		apUserChat.setStyle(null);
-		
+	public void mudaTabPane() {
+		if(!ViewCentralController.tabPaneConversasStatic.getSelectionModel().getSelectedItem().getId().equals("tabConversasSalvas")){
+			ViewCentralController.tabPaneConversasStatic.getSelectionModel().selectFirst();
+		}
 	}
 	
 	public void clicado() {
+		achaChat(this);
+		mudaTabPane();
+		
 		Colecao.associaConversaComChat();
 		ViewCentralController.setUserParaConversar(usuario, conversa);
 		requisitaHistoricoConversa();
@@ -128,5 +154,29 @@ public class ViewUserChatController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
+	}
+
+	@Override
+	protected boolean impl_computeContains(double arg0, double arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public BaseBounds impl_computeGeomBounds(BaseBounds arg0, BaseTransform arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected NGNode impl_createPeer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object impl_processMXNode(MXNodeAlgorithm arg0, MXNodeAlgorithmContext arg1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

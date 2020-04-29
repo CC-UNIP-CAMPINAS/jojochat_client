@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" onMouseEntered="#selecionado" onMouseExited="#deSeleciona" prefHeight="62.0" prefWidth="315.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
+<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" prefHeight="62.0" prefWidth="315.0" stylesheets="@css/viewUserChat.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
    <children>
       <Circle fill="DODGERBLUE" layoutX="31.0" layoutY="31.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" />
       <Label fx:id="lbUser" layoutX="70.0" layoutY="7.0" prefHeight="27.0" prefWidth="214.0">

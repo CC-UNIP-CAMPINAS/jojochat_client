@@ -15,7 +15,6 @@ import com.jfoenix.controls.JFXButton;
 
 import app.Main;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,12 +29,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import model.entities.Arquivo;
 import model.entities.Colecao;
 import model.entities.Conversa;
@@ -56,6 +55,7 @@ public class ViewCentralController implements Initializable {
 	
 	public static AnchorPane apCentralStatic;
 	public static Pane paneOpacoStatic;
+	public static TabPane tabPaneConversasStatic;
 
 	
 	@FXML
@@ -63,6 +63,12 @@ public class ViewCentralController implements Initializable {
 
     @FXML
     private BorderPane bpCentral;
+    
+    @FXML
+    private Circle circleImgPerfil;
+    
+    @FXML
+    private ImageView imgProfile;
 
     @FXML
     private AnchorPane apCentral;
@@ -171,6 +177,8 @@ public class ViewCentralController implements Initializable {
 	public void associaComponentesStaticos() {
 		ViewCentralController.apCentralStatic = apCentral;
 		ViewCentralController.paneOpacoStatic = paneOpaco;
+		ViewCentralController.tabPaneConversasStatic = tabPaneConversas;
+		
 	}
 	
 	// #################Utilitarios do controlador################# //
@@ -216,7 +224,7 @@ public class ViewCentralController implements Initializable {
 		});
 	}
 	
-	public void limpaConversa() {
+	public void limpaConversaAtual() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -271,8 +279,6 @@ public class ViewCentralController implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				vbConversas.getChildren().clear();
-				Colecao.chatsAtivos.clear();
 				for (Conversa conversa : conversas) {
 					FXMLLoader userChatLoader;
 					try {
@@ -284,9 +290,14 @@ public class ViewCentralController implements Initializable {
 						controlador.setaMensagem(conversa.getMensagem());
 						controlador.setaConversa(conversa);
 						
-						Colecao.chatsAtivos.add(controlador);
-						vbConversas.getChildren().add(userChatParent);
-						
+						if(!Colecao.chatsAtivos.contains(controlador)) {
+							Colecao.chatsAtivos.add(controlador);
+							vbConversas.getChildren().add(userChatParent);
+						}
+						else {
+							Colecao.chatsAtivos.get(Colecao.chatsAtivos.indexOf(controlador)).setaMensagem(conversa.getMensagem());
+							Colecao.chatsAtivos.get(Colecao.chatsAtivos.indexOf(controlador)).setaConversa(conversa);
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -522,6 +533,7 @@ public class ViewCentralController implements Initializable {
 
 	public void recebeMensagem(Vector<?> requisicao, Baloes opcao) throws IOException {
 		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
+		requisitaConversas();
 		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
 			if(opcao.equals(Baloes.BALAO_DESTINATARIO)) {
 				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_DESTINATARIO);
@@ -536,12 +548,12 @@ public class ViewCentralController implements Initializable {
 		else {
 			AlertUtils.showNotificacaoNovaMensagem(mensagemRecebida);
 		}	
-		requisitaConversas();
+		
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void recebeHistoricoMensagem(Vector<?> requisicao) {
-		limpaConversa();
+		limpaConversaAtual();
 		Vector<Mensagem>  historicoMensagens = (Vector<Mensagem>)requisicao.get(1);
 		
 		if(!historicoMensagens.isEmpty()) {
@@ -601,6 +613,13 @@ public class ViewCentralController implements Initializable {
 		associaComponentesStaticos();
 		requisitaConversas();
 		setAcaoComponentes();
+		
+//		Image teste = new Image(FileUtils.mostraSeletorArquivos(Main.primaryStage).toURI().toString());
+//		imgProfile.setImage(teste);
+//		
+//		
+//		circleImgPerfil.setFill(new ImagePattern(teste));
+		
 		
 		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());
 
