@@ -181,7 +181,7 @@ public class ViewLoginController implements Initializable {
 	}
 
 	public void setaImagemProfile() {
-    	arquivoDeImagem = FileUtils.mostraSeletorArquivos(Main.primaryStage);
+    	arquivoDeImagem = FileUtils.mostraSeletorImagens(Main.primaryStage);
     	if(arquivoDeImagem != null) {
     		Image imagemPerfil = new Image(arquivoDeImagem.toURI().toString());
         	imgProfile.setVisible(false);
@@ -230,6 +230,7 @@ public class ViewLoginController implements Initializable {
 				e.printStackTrace();
 			}
 			
+			parada = true;
 			spinCarregando.setVisible(true);
 			
 			Task<Void> tarefa = new Task<Void>() {

@@ -15,6 +15,7 @@ import com.jfoenix.controls.JFXButton;
 
 import app.Main;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,6 +28,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -34,6 +36,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.entities.Arquivo;
 import model.entities.Colecao;
@@ -197,6 +200,25 @@ public class ViewCentralController implements Initializable {
 		        }
 		    }
 		});
+	}
+	
+	public void setaImagemPerfil() {
+		Task<Void> tarefa = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				File ImagePerfil = new File(FileUtils.gravaImagemPerfil(user.getProfileImage(), String.valueOf(user.getId()), FileUtils.getCaminhoImagensPerfil()));
+				Image profile = new Image(ImagePerfil.toURI().toString());
+				Platform.runLater(() -> {
+					circleImgPerfil.setFill(new ImagePattern(profile));
+				});
+				return null;
+			}
+		};
+
+		Platform.runLater(() -> {
+			Thread t = new Thread(tarefa);
+			t.start();
+		});	
 	}
 	
 	public void abreConversa() {
@@ -528,6 +550,7 @@ public class ViewCentralController implements Initializable {
 			else {
 				atualizaVboxConversa(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
 			}
+			taEscritura.setText("");
 		}
 	}
 
@@ -611,14 +634,11 @@ public class ViewCentralController implements Initializable {
 		lbUser.setText(user.getNomeDeExibicao());
 		
 		associaComponentesStaticos();
+		setaImagemPerfil();
 		requisitaConversas();
 		setAcaoComponentes();
 		
-//		Image teste = new Image(FileUtils.mostraSeletorArquivos(Main.primaryStage).toURI().toString());
-//		imgProfile.setImage(teste);
-//		
-//		
-//		circleImgPerfil.setFill(new ImagePattern(teste));
+		
 		
 		
 		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());

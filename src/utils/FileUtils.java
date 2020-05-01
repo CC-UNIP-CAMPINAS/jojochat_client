@@ -15,8 +15,17 @@ import model.entities.Arquivo;
 
 public class FileUtils {
 	final static FileChooser fileChooser = new FileChooser();
+	final static String[] extensoesImagem = {"*.png", "*.jpg"};
 	
 	public static File mostraSeletorArquivos(Stage janela) {
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		File file = fileChooser.showOpenDialog(janela);
+		return verificaTamanhoArquivo(file);
+	}
+	
+	public static File mostraSeletorImagens(Stage janela) {
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Arquivos de imagem", extensoesImagem);
+        fileChooser.getExtensionFilters().add(extFilter);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File file = fileChooser.showOpenDialog(janela);
 		return verificaTamanhoArquivo(file);
@@ -156,10 +165,28 @@ public class FileUtils {
         return destino;
 	}
 	
+	public static String gravaImagemPerfil(byte[] arquivo, String nome, String destino) throws IOException {
+		criaDiretorio(destino);
+		destino += File.separatorChar + nome;
+		FileOutputStream fos = new FileOutputStream(destino);
+		fos.write(arquivo);
+		fos.close();
+		return destino;
+	}
+	
 	public static String getCaminhoArquivos(){
 		if (IdentificadorSoUtils.sistema().equals("linux")){
 			 return System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
 		}
 		return System.getProperty("user.home")+File.separatorChar+"Documents"+File.separatorChar+"JOJO_DATA"+ File.separatorChar+"Arquivos";
+	}
+	
+	public static String getCaminhoImagensPerfil() {
+		if (IdentificadorSoUtils.sistema().equals("linux")) {
+			return System.getProperty("user.home") + File.separatorChar + "Documents" + File.separatorChar + "JOJO_DATA"
+					+ File.separatorChar + "users_data" + File.separatorChar + "img_profile";
+		}
+		return System.getProperty("user.home") + File.separatorChar + "Documents" + File.separatorChar + "JOJO_DATA"
+				+ File.separatorChar + "users_data" + File.separatorChar + "img_profile";
 	}
 }

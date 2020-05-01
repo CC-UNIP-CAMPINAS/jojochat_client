@@ -2,8 +2,6 @@ package model.entities;
 
 import java.io.Serializable;
 
-import javafx.scene.image.Image;
-
 public class Usuario implements Serializable{	
 	/**
 	 * 
@@ -11,15 +9,15 @@ public class Usuario implements Serializable{
 	private static final long serialVersionUID = 1423238495738038990L;
 	
 	private String nomeDeExibicao;
-	private transient Image fotoDePerfil;
 	private String usuario;
+	private byte[] profileImage;
 	private int id;
 	
-	public Usuario(int id, String nomeDeExibicao, String usuario, Image fotoDePerfil) {
+	public Usuario(int id, String nomeDeExibicao, String usuario, byte[] profileImage) {
 		this.nomeDeExibicao = nomeDeExibicao;
 		this.usuario = usuario;
 		this.id = id;
-		this.setFotoDePerfil(fotoDePerfil);
+		this.setProfileImage(profileImage);
 	}
 	
 	public String getUsuario() {
@@ -46,12 +44,12 @@ public class Usuario implements Serializable{
 		this.id = id;
 	}
 
-	public Image getFotoDePerfil() {
-		return fotoDePerfil;
+	public byte[] getProfileImage() {
+		return profileImage;
 	}
 
-	public void setFotoDePerfil(Image fotoDePerfil) {
-		this.fotoDePerfil = fotoDePerfil;
+	public void setProfileImage(byte[] profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	@Override
