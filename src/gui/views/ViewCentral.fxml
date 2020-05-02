@@ -82,11 +82,7 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Label>
-                  <ImageView fx:id="imgUserChamado" fitHeight="45.0" fitWidth="47.0" layoutX="10.0">
-                     <image>
-                        <Image url="@../../model/img/icons8-male-user-60.png" />
-                     </image>
-                  </ImageView>
+                  <Circle fx:id="circleImgCoversa" fill="DODGERBLUE" layoutX="31.0" layoutY="23.0" radius="20.0" stroke="#f0f0f3" strokeType="INSIDE" />
                </children>
             </AnchorPane>
             <ScrollPane fx:id="scrollPaneMensagens" fitToWidth="true" layoutX="2.0" layoutY="48.0" pannable="true" prefHeight="452.0" prefWidth="569.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">

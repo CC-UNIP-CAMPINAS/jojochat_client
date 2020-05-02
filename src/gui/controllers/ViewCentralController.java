@@ -59,19 +59,13 @@ public class ViewCentralController implements Initializable {
 	public static AnchorPane apCentralStatic;
 	public static Pane paneOpacoStatic;
 	public static TabPane tabPaneConversasStatic;
-
+	public static Circle circleImgCoversaStatic;
 	
 	@FXML
     private AnchorPane apCentral2;
 
     @FXML
     private BorderPane bpCentral;
-    
-    @FXML
-    private Circle circleImgPerfil;
-    
-    @FXML
-    private ImageView imgProfile;
 
     @FXML
     private AnchorPane apCentral;
@@ -107,7 +101,7 @@ public class ViewCentralController implements Initializable {
     private Label lbUserChamado;
 
     @FXML
-    private ImageView imgUserChamado;
+    private Circle circleImgCoversa;
 
     @FXML
     private ScrollPane scrollPaneMensagens;
@@ -122,7 +116,7 @@ public class ViewCentralController implements Initializable {
     private Label lbUser;
 
     @FXML
-    private ImageView imgUser;
+    private Circle circleImgPerfil;
 
     @FXML
     private TextField tfPesquisa;
@@ -181,6 +175,7 @@ public class ViewCentralController implements Initializable {
 		ViewCentralController.apCentralStatic = apCentral;
 		ViewCentralController.paneOpacoStatic = paneOpaco;
 		ViewCentralController.tabPaneConversasStatic = tabPaneConversas;
+		ViewCentralController.circleImgCoversaStatic = circleImgCoversa;
 		
 	}
 	

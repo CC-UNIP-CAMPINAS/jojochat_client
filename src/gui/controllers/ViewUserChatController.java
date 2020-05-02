@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,26 +12,35 @@ import com.sun.javafx.jmx.MXNodeAlgorithm;
 import com.sun.javafx.jmx.MXNodeAlgorithmContext;
 import com.sun.javafx.sg.prism.NGNode;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.entities.Colecao;
 import model.entities.Conversa;
 import model.entities.Mensagem;
 import model.entities.Usuario;
 import utils.ConnectionUtils;
+import utils.FileUtils;
 
 public class ViewUserChatController extends Node implements Initializable {
 	
 	public Usuario usuario;
+	public Image imgProfile;
 	public Conversa conversa;
 	private int numeroMensagens = 0;
 	
 	@FXML
 	private AnchorPane apUserChat;
+	
+	@FXML
+	private Circle circuloImagemPerfil;
 	
 	@FXML
 	private Label lbUser;
@@ -48,6 +58,7 @@ public class ViewUserChatController extends Node implements Initializable {
 	public void setaUsuario(Usuario usuario) {
 		this.usuario = usuario;
 		lbUser.setText(usuario.getNomeDeExibicao());
+		setaImagemPerfil();
 	}
 	
 	public void setaConversa(Conversa conversa) {
@@ -65,6 +76,29 @@ public class ViewUserChatController extends Node implements Initializable {
 	
 	public String pegaNome() {
 		return lbUser.getText();
+	}
+	
+	public void setaImagemPerfil() {
+		Task<Void> tarefa = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				File arquivoImagem = new File(FileUtils.getCaminhoImagensPerfil() + File.separator + usuario.getId());
+				if(!arquivoImagem.exists()) {
+					arquivoImagem = new File(FileUtils.gravaImagemPerfil(usuario.getProfileImage(), String.valueOf(usuario.getId()), FileUtils.getCaminhoImagensPerfil()));
+				}
+				
+				imgProfile = new Image(arquivoImagem.toURI().toString());
+				Platform.runLater(() -> {
+					circuloImagemPerfil.setFill(new ImagePattern(imgProfile));
+				});
+				return null;
+			}
+		};
+
+		Platform.runLater(() -> {
+			Thread t = new Thread(tarefa);
+			t.start();
+		});	
 	}
 	
 	public void achaChat(ViewUserChatController viewUserChatController) {
@@ -98,8 +132,8 @@ public class ViewUserChatController extends Node implements Initializable {
 		
 		Colecao.associaConversaComChat();
 		ViewCentralController.setUserParaConversar(usuario, conversa);
+		ViewCentralController.circleImgCoversaStatic.setFill(new ImagePattern(imgProfile) );
 		requisitaHistoricoConversa();
-		//zeraNumeroMensagens();
 	}
 	
 	

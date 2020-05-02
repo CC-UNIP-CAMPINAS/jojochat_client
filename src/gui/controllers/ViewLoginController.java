@@ -150,6 +150,9 @@ public class ViewLoginController implements Initializable {
 				protected Void call() throws Exception {
 					Vector<Object> resposta = (Vector<Object>) ConnectionUtils.entrada.readObject();
 					Boolean permissaoDeLogin = (Boolean) resposta.get(0);
+					
+					Thread.sleep(3000);
+					
 					if (permissaoDeLogin) {
 						ViewCentralController.setUser((Usuario) resposta.get(1));
 						Platform.runLater(() -> {
