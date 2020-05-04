@@ -69,13 +69,14 @@ public class ViewBalaoArquivoDestinatarioController implements Initializable {
 	}
 	
 	public boolean verificaArquivo() {
-		if(FileUtils.verificaArquivo(this.mensagem.getArquivo().getLocalizacaoServidor())) {
+		if(FileUtils.verificaArquivo(this.mensagem.getArquivo().getLocalizacaoDestinatario())) {
 			spinCarregando.setVisible(false);
 			imgDownload.setVisible(false);
 			return true;
 		}
 		else {
-			String caminho = FileUtils.getCaminhoArquivos()+File.separatorChar+String.valueOf(mensagem.getRemetente().getId());
+			String caminho = FileUtils.getCaminhoArquivos();
+			File arquivo = new File(caminho + File.separatorChar+String.valueOf(mensagem.getRemetente().getId() + ".txt"));
 			mensagem.getArquivo().setLocalizacaoDestinatario(FileUtils.procuraArquivo(caminho, mensagem.getArquivo().getLocalizacaoServidor()));
 			if(!mensagem.getArquivo().getLocalizacaoDestinatario().exists()) {
 				imgDownload.setVisible(true);
