@@ -1,9 +1,13 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
@@ -109,8 +113,10 @@ public class FileUtils {
 	        sourceChannel = new FileInputStream(arquivo).getChannel();
 	        destinationChannel = new FileOutputStream(arquivoTemp).getChannel();
 	        sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
-	        
+	        	        	
 	        ViewCentralController.setArquivoParaEnvio(arquivoTemp);
+	        
+	        escreveListaArquivos(new File(FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(ViewCentralController.getUserParaConversar().getId()+".txt")), "remetente;"+ViewCentralController.getArquivoParaEnvio().getName()+";"+ViewCentralController.getArquivoParaEnvio().toString()+";");
 	    } catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
@@ -133,6 +139,9 @@ public class FileUtils {
 	}
 	
 	public static boolean verificaArquivo(File arquivo) {
+		if(arquivo == null) {
+			return false;
+		}
 		if(arquivo.exists()) {
 			return true;
 		}
@@ -172,6 +181,38 @@ public class FileUtils {
 		fos.write(arquivo);
 		fos.close();
 		return destino;
+	}
+	
+	public static File percorreListaArquivos(File listaArquivos, String nomeArquivo) {
+		try {
+			BufferedReader bf = new BufferedReader(new FileReader(listaArquivos));
+			while(bf.ready()) {
+				String linhaCompleta = bf.readLine();
+				String[] linha = linhaCompleta.split(";");
+				if(linha[1].equals(nomeArquivo)) {
+					bf.close();
+					return new File(linha[2]);
+				}
+			}
+			bf.close();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void escreveListaArquivos(File listaArquivos, String linha) {
+		try {
+			if(!listaArquivos.exists()) {
+				listaArquivos.createNewFile();
+			}
+			BufferedWriter bw = new BufferedWriter(new FileWriter(listaArquivos, true));
+			bw.write(linha+"\n");
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static String getCaminhoArquivos(){

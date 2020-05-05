@@ -495,15 +495,16 @@ public class ViewCentralController implements Initializable {
 		arquivoParaEnvio = FileUtils.mostraSeletorArquivos(Main.primaryStage);
 		String textoDaMensagem = "";
 		LocalDateTime horario = LocalDateTime.now();
-		if(arquivoParaEnvio != null) {
+		if(getArquivoParaEnvio() != null) {
 			AlertUtils chamador = new AlertUtils();
-			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(arquivoParaEnvio, horario);	
+			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(getArquivoParaEnvio(), horario);	
 		}
 		
-		if(arquivoParaEnvio != null) {
+		if(getArquivoParaEnvio() != null) {
 			try {
+				
 				Vector<Object> requisicao = new Vector<>();
-				Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario, new Arquivo(FileUtils.fileToBytes(arquivoParaEnvio), arquivoParaEnvio));
+				Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario, new Arquivo(FileUtils.fileToBytes(getArquivoParaEnvio()), getArquivoParaEnvio()));
 				
 				requisicao.add("mensagemComArquivo");	
 				requisicao.add(mensagemParaEnvio);
@@ -644,6 +645,10 @@ public class ViewCentralController implements Initializable {
 	}
 
 	// #################Thread#################//
+
+	public static File getArquivoParaEnvio() {
+		return arquivoParaEnvio;
+	}
 
 	class ServerHandler implements Runnable {
 

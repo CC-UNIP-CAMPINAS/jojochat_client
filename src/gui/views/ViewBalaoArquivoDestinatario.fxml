@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -14,8 +15,8 @@
       <Polyline fx:id="triBalao1" fill="#e0e0e0" layoutX="34.0" layoutY="40.0" points="0.0, -40.0, -30.0, -40.0, 0.0, -12.0, 0.0, -40.0" stroke="#e0e0e0" strokeType="INSIDE" />
       <AnchorPane fx:id="apInterno" layoutX="23.0" style="-fx-background-color: #e0e0e0; -fx-background-radius: 1em;">
          <children>
-            <AnchorPane onMouseClicked="#abreArquivo" opacity="0.16" prefHeight="70.0" prefWidth="200.0" style="-fx-background-color: black; -fx-background-radius: 1em;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Label fx:id="lbTamanhoArquivo" layoutX="80.0" layoutY="29.0" prefHeight="16.0" prefWidth="206.0" text="262.2 kB" textFill="#686666">
+            <AnchorPane fx:id="apArquivo" onMouseClicked="#abreArquivo" opacity="0.16" prefHeight="70.0" prefWidth="200.0" style="-fx-background-radius: 1em;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label fx:id="lbTamanhoArquivo" layoutX="80.0" layoutY="29.0" prefHeight="16.0" prefWidth="206.0" text="262.2 kB" textFill="#686666" visible="false">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -39,12 +40,19 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <ImageView fx:id="imgDownload" fitHeight="28.0" fitWidth="32.0" layoutX="272.0" layoutY="37.0" onMouseClicked="#fazDownload" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../model/img/icons8-download-100.png" />
-               </image>
-            </ImageView>
-            <JFXSpinner fx:id="spinCarregando" layoutX="269.0" layoutY="31.0" prefHeight="38.0" prefWidth="32.0" />
+            <JFXSpinner fx:id="spinCarregando" layoutX="249.0" layoutY="32.0" prefHeight="38.0" prefWidth="32.0" visible="false" />
+            <JFXButton fx:id="btDownload" layoutX="246.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="40.0" text=" " visible="false">
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="27.0" onMouseClicked="#fazDownload" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../model/img/icons8-download-100.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="4.0" right="1.0" />
+               </padding>
+            </JFXButton>
          </children>
          <padding>
             <Insets bottom="15.0" left="5.0" right="10.0" top="5.0" />
