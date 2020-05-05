@@ -624,6 +624,12 @@ public class ViewCentralController implements Initializable {
 			AlertUtils.showNotificacaoLogin(true, Colecao.usuariosAtivos.lastElement().getUsuario());
 		}
 	}
+	
+	private void recebeArquivo(Vector<?> requisicao) throws IOException {
+		Mensagem mensagemComArquivo = (Mensagem) requisicao.get(1);
+		String destino = FileUtils.gravaArquivo(mensagemComArquivo.getArquivo(), FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(userParaConversar.getId()));
+		FileUtils.escreveListaArquivos(new File(FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(ViewCentralController.getUserParaConversar().getId()+".txt")), "remetente;"+mensagemComArquivo.getArquivo().getLocalizacaoServidor().getName()+";"+destino+";");
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -633,9 +639,6 @@ public class ViewCentralController implements Initializable {
 		setaImagemPerfil();
 		requisitaConversas();
 		setAcaoComponentes();
-		
-		
-		
 		
 		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());
 
@@ -689,7 +692,11 @@ public class ViewCentralController implements Initializable {
 						case "conversas":
 							recebeConversas(requisicao);
 							break;
+//						case "arquivo":
+//							recebeArquivo(requisicao);
+//							break;
 						default:
+							Colecao.filaRequisicoes.add(requisicao);
 							break;
 						}
 					}

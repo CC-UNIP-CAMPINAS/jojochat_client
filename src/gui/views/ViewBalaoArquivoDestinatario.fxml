@@ -41,7 +41,7 @@
                </font>
             </Label>
             <JFXSpinner fx:id="spinCarregando" layoutX="249.0" layoutY="32.0" prefHeight="38.0" prefWidth="32.0" visible="false" />
-            <JFXButton fx:id="btDownload" layoutX="246.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="40.0" text=" " visible="false">
+            <JFXButton fx:id="btDownload" layoutX="246.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#fazDownload" prefHeight="38.0" prefWidth="40.0" text=" " visible="false">
                <graphic>
                   <ImageView fitHeight="33.0" fitWidth="27.0" onMouseClicked="#fazDownload" pickOnBounds="true" preserveRatio="true">
                      <image>

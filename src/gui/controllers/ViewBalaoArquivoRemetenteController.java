@@ -50,7 +50,7 @@ public class ViewBalaoArquivoRemetenteController implements Initializable {
 
 	@FXML
 	void fazDownload() {
-
+		
 	}
 
 	public void setaInformacoes(Mensagem mensagem) {

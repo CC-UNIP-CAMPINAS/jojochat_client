@@ -8,6 +8,7 @@ public class Colecao {
 	public static Vector<Usuario> usuariosAtivos = new Vector<>();
 	public static Vector<ViewUserChatController> chatsAtivos = new Vector<>();
 	public static Vector<ViewUserChatController> chatsNaoAtivos = new Vector<>();
+	public static Vector<Vector<?>> filaRequisicoes = new Vector<>();
 	
 	public static void associaConversaComChat() {
 		for (ViewUserChatController chatNaoAtivo : Colecao.chatsNaoAtivos) {

@@ -30,63 +30,62 @@ import utils.ConnectionUtils;
 import utils.FileUtils;
 
 public class ViewUserChatController extends Node implements Initializable {
-	
+
 	public Usuario usuario;
 	public Image imgProfile;
 	public Conversa conversa;
 	private int numeroMensagens = 0;
-	
+
 	@FXML
 	private AnchorPane apUserChat;
-	
+
 	@FXML
 	private Circle circuloImagemPerfil;
-	
+
 	@FXML
 	private Label lbUser;
-	
+
 	@FXML
 	private Label lbMensagem;
-	
+
 	@FXML
-    private Circle circuloNumeroMensagens;
+	private Circle circuloNumeroMensagens;
 
-    @FXML
-    private Label lbNumeroMensagens;
+	@FXML
+	private Label lbNumeroMensagens;
 
-	
 	public void setaUsuario(Usuario usuario) {
 		this.usuario = usuario;
 		lbUser.setText(usuario.getNomeDeExibicao());
 		setaImagemPerfil();
 	}
-	
+
 	public void setaConversa(Conversa conversa) {
 		this.conversa = conversa;
 	}
-	
+
 	public void setaMensagem(Mensagem mensagem) {
-		if(mensagem.getArquivo() != null) {
+		if (mensagem.getArquivo() != null) {
 			lbMensagem.setText("Arquivo");
-		}
-		else {
+		} else {
 			lbMensagem.setText(mensagem.getMensagem());
 		}
 	}
-	
+
 	public String pegaNome() {
 		return lbUser.getText();
 	}
-	
+
 	public void setaImagemPerfil() {
 		Task<Void> tarefa = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
 				File arquivoImagem = new File(FileUtils.getCaminhoImagensPerfil() + File.separator + usuario.getId());
-				if(!arquivoImagem.exists()) {
-					arquivoImagem = new File(FileUtils.gravaImagemPerfil(usuario.getProfileImage(), String.valueOf(usuario.getId()), FileUtils.getCaminhoImagensPerfil()));
+				if (!arquivoImagem.exists()) {
+					arquivoImagem = new File(FileUtils.gravaImagemPerfil(usuario.getProfileImage(),
+							String.valueOf(usuario.getId()), FileUtils.getCaminhoImagensPerfil()));
 				}
-				
+
 				imgProfile = new Image(arquivoImagem.toURI().toString());
 				Platform.runLater(() -> {
 					circuloImagemPerfil.setFill(new ImagePattern(imgProfile));
@@ -98,48 +97,46 @@ public class ViewUserChatController extends Node implements Initializable {
 		Platform.runLater(() -> {
 			Thread t = new Thread(tarefa);
 			t.start();
-		});	
+		});
 	}
-	
+
 	public void achaChat(ViewUserChatController viewUserChatController) {
-		for(ViewUserChatController ap : Colecao.chatsAtivos) {
-			if(ap.equals(viewUserChatController)) {
+		for (ViewUserChatController ap : Colecao.chatsAtivos) {
+			if (ap.equals(viewUserChatController)) {
 				ap.apUserChat.setStyle("-fx-background-color: #A1A1A1");
-			}
-			else {
+			} else {
 				ap.apUserChat.setStyle(null);
 			}
 		}
-		for(ViewUserChatController ap : Colecao.chatsNaoAtivos) {
-			if(ap.equals(viewUserChatController)) {
+		for (ViewUserChatController ap : Colecao.chatsNaoAtivos) {
+			if (ap.equals(viewUserChatController)) {
 				ap.apUserChat.setStyle("-fx-background-color: #A1A1A1");
-			}
-			else {
+			} else {
 				ap.apUserChat.setStyle(null);
 			}
 		}
 	}
-	
+
 	public void mudaTabPane() {
-		if(!ViewCentralController.tabPaneConversasStatic.getSelectionModel().getSelectedItem().getId().equals("tabConversasSalvas")){
+		if (!ViewCentralController.tabPaneConversasStatic.getSelectionModel().getSelectedItem().getId()
+				.equals("tabConversasSalvas")) {
 			ViewCentralController.tabPaneConversasStatic.getSelectionModel().selectFirst();
 		}
 	}
-	
+
 	public void clicado() {
 		achaChat(this);
 		mudaTabPane();
-		
+
 		Colecao.associaConversaComChat();
 		ViewCentralController.setUserParaConversar(usuario, conversa);
-		ViewCentralController.circleImgCoversaStatic.setFill(new ImagePattern(imgProfile) );
+		ViewCentralController.circleImgCoversaStatic.setFill(new ImagePattern(imgProfile));
 		requisitaHistoricoConversa();
 	}
-	
-	
+
 	public void requisitaHistoricoConversa() {
 		Vector<Object> requisicao = new Vector<>();
-		
+
 		requisicao.add("historico");
 		requisicao.add(ViewCentralController.getUser());
 		requisicao.add(ViewCentralController.getUserParaConversar());
@@ -168,26 +165,26 @@ public class ViewUserChatController extends Node implements Initializable {
 			return false;
 		return true;
 	}
-	
+
 	public void aumentaNumeroMensagens() {
 		numeroMensagens = Integer.parseInt(lbNumeroMensagens.getText());
 		numeroMensagens++;
 		lbNumeroMensagens.setVisible(true);
 		circuloNumeroMensagens.setVisible(true);
-		lbNumeroMensagens.setText(""+numeroMensagens);
-		
+		lbNumeroMensagens.setText("" + numeroMensagens);
+
 	}
-	
+
 	public void zeraNumeroMensagens() {
 		lbNumeroMensagens.setText("0");
 		lbNumeroMensagens.setVisible(false);
 		circuloNumeroMensagens.setVisible(false);
-		
+
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+
 	}
 
 	@Override

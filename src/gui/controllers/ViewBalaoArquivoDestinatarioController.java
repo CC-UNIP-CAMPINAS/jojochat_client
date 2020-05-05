@@ -5,23 +5,30 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polyline;
+import model.entities.Colecao;
 import model.entities.Mensagem;
 import utils.AlertUtils;
+import utils.ConnectionUtils;
 import utils.ConversorDataUtils;
 import utils.FileUtils;
 
 public class ViewBalaoArquivoDestinatarioController implements Initializable {
 
 	private Mensagem mensagem;
+	
+	boolean parada;
 
 	@FXML
     private AnchorPane apCentral;
@@ -50,9 +57,62 @@ public class ViewBalaoArquivoDestinatarioController implements Initializable {
     @FXML
     private JFXButton btDownload;
 
+	@SuppressWarnings("unchecked")
 	@FXML
 	void fazDownload() {
+		Vector<Object> requisicao = new Vector<>();
+		
+		requisicao.add("arquivo");
+		requisicao.add(mensagem);
 
+		try {
+			ConnectionUtils.saida.writeObject(requisicao);
+			ConnectionUtils.saida.reset();
+			parada = true;
+			spinCarregando.setVisible(true);
+			
+			Task<Void> tarefa = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					while (parada) {
+						Thread.sleep(0);
+					}
+					Platform.runLater(() -> {
+						verificaArquivo();
+					});
+					return null;
+				}
+			};
+
+			Platform.runLater(() -> {
+				Thread t = new Thread(tarefa);
+				t.start();
+			});
+			
+			Task<Void> tarefaDownload = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					Thread.sleep(1000);
+					Vector<Object> requisicao = (Vector<Object>) Colecao.filaRequisicoes.get(0);
+					Colecao.filaRequisicoes.clear();
+					if(requisicao.get(0).equals("arquivo")) {
+						Mensagem mensagemComArquivo = (Mensagem) requisicao.get(1);
+						String destino = FileUtils.gravaArquivo(mensagemComArquivo.getArquivo(), FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(ViewCentralController.getUserParaConversar().getId()));
+						FileUtils.escreveListaArquivos(new File(FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(ViewCentralController.getUserParaConversar().getId()+".txt")), "remetente;"+mensagemComArquivo.getArquivo().getLocalizacaoServidor().getName()+";"+destino+";");
+					}
+					parada = false;
+					return null;
+				}
+			};
+
+			Platform.runLater(() -> {
+				Thread t = new Thread(tarefaDownload);
+				t.start();
+			});
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setaInformacoesIniciais(Mensagem mensagem) {
@@ -61,6 +121,8 @@ public class ViewBalaoArquivoDestinatarioController implements Initializable {
 		lbTamanhoArquivo.setText(FileUtils.conversorDeUnidade(mensagem.getArquivo().getLocalizacaoServidor()));
 		lbMensagem.setText(mensagem.getMensagem());
 		lbHorario.setText(ConversorDataUtils.getTimeToString(mensagem.getDateTime()));
+		
+		verificaArquivo();
 	}
 	
 	public void setaInformacoesNovas() {
