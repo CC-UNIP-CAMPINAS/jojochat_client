@@ -61,96 +61,96 @@ public class ViewCentralController implements Initializable {
 	private static Usuario userParaConversar;
 	private static Conversa conversaAtual;
 	private static File arquivoParaEnvio;
-	
+
 	public static AnchorPane apCentralStatic;
 	public static Pane paneOpacoStatic;
 	public static TabPane tabPaneConversasStatic;
 	public static Circle circleImgCoversaStatic;
 	public static TextArea taEscrituraStatic;
-	
+
 	@FXML
-    private AnchorPane apCentral2;
+	private AnchorPane apCentral2;
 
-    @FXML
-    private BorderPane bpCentral;
+	@FXML
+	private BorderPane bpCentral;
 
-    @FXML
-    private AnchorPane apCentral;
+	@FXML
+	private AnchorPane apCentral;
 
-    @FXML
-    private AnchorPane apCentralInf;
+	@FXML
+	private AnchorPane apCentralInf;
 
-    @FXML
-    private TextArea taEscritura;
+	@FXML
+	private TextArea taEscritura;
 
-    @FXML
-    private JFXButton btEnviar;
+	@FXML
+	private JFXButton btEnviar;
 
-    @FXML
-    private ImageView imgEnviar;
+	@FXML
+	private ImageView imgEnviar;
 
-    @FXML
-    private JFXButton btEmoji;
+	@FXML
+	private JFXButton btEmoji;
 
-    @FXML
-    private ImageView imgEmoji;
+	@FXML
+	private ImageView imgEmoji;
 
-    @FXML
-    private JFXButton btArquivo;
+	@FXML
+	private JFXButton btArquivo;
 
-    @FXML
-    private ImageView ImgArquivo;
+	@FXML
+	private ImageView ImgArquivo;
 
-    @FXML
-    private AnchorPane apCentralSup;
+	@FXML
+	private AnchorPane apCentralSup;
 
-    @FXML
-    private Label lbUserChamado;
+	@FXML
+	private Label lbUserChamado;
 
-    @FXML
-    private Circle circleImgCoversa;
+	@FXML
+	private Circle circleImgCoversa;
 
-    @FXML
-    private ScrollPane scrollPaneMensagens;
+	@FXML
+	private ScrollPane scrollPaneMensagens;
 
-    @FXML
-    private VBox vbMensagem;
+	@FXML
+	private VBox vbMensagem;
 
-    @FXML
-    private AnchorPane apLeftSup;
+	@FXML
+	private AnchorPane apLeftSup;
 
-    @FXML
-    private Label lbUser;
+	@FXML
+	private Label lbUser;
 
-    @FXML
-    private Circle circleImgPerfil;
+	@FXML
+	private Circle circleImgPerfil;
 
-    @FXML
-    private TextField tfPesquisa;
+	@FXML
+	private TextField tfPesquisa;
 
-    @FXML
-    private TabPane tabPaneConversas;
+	@FXML
+	private TabPane tabPaneConversas;
 
-    @FXML
-    private Tab tabConversasSalvas;
+	@FXML
+	private Tab tabConversasSalvas;
 
-    @FXML
-    private ScrollPane scrollPaneUser;
+	@FXML
+	private ScrollPane scrollPaneUser;
 
-    @FXML
-    private VBox vbConversas;
+	@FXML
+	private VBox vbConversas;
 
-    @FXML
-    private Tab tabNovasConversas;
+	@FXML
+	private Tab tabNovasConversas;
 
-    @FXML
-    private AnchorPane acTabNovasConversas;
+	@FXML
+	private AnchorPane acTabNovasConversas;
 
-    @FXML
-    private VBox vbUsuariosLogadas;
+	@FXML
+	private VBox vbUsuariosLogadas;
 
-    @FXML
-    private Pane paneOpaco;
+	@FXML
+	private Pane paneOpaco;
 
 	// #################Gets/Sets################# //
 
@@ -161,7 +161,7 @@ public class ViewCentralController implements Initializable {
 	public static void setUser(Usuario user) {
 		ViewCentralController.user = user;
 	}
-	
+
 	public static void setArquivoParaEnvio(File arquivoParaEnvio) {
 		ViewCentralController.arquivoParaEnvio = arquivoParaEnvio;
 	}
@@ -177,38 +177,38 @@ public class ViewCentralController implements Initializable {
 	}
 
 	// #################Associação de componentes Statics################# //
-	
+
 	public void associaComponentesStaticos() {
 		ViewCentralController.apCentralStatic = apCentral;
 		ViewCentralController.paneOpacoStatic = paneOpaco;
 		ViewCentralController.tabPaneConversasStatic = tabPaneConversas;
 		ViewCentralController.circleImgCoversaStatic = circleImgCoversa;
 		ViewCentralController.taEscrituraStatic = taEscritura;
-		
+
 	}
-	
+
 	// #################Utilitarios do controlador################# //
-	
+
 	public void setAcaoComponentes() {
 		taEscritura.setOnKeyPressed(event -> {
-		    if (event.getCode() == KeyCode.ENTER) {
-		        event.consume();//Evita que ele mande o enter no textArea
-		        if (event.isShiftDown()) {//Vai quebrar a linha onde for indicado
-		        	int posicaoCursor = taEscritura.getCaretPosition();
-		        	String fraseAntes = taEscritura.getText(0, posicaoCursor);
+			if (event.getCode() == KeyCode.ENTER) {
+				event.consume();// Evita que ele mande o enter no textArea
+				if (event.isShiftDown()) {// Vai quebrar a linha onde for indicado
+					int posicaoCursor = taEscritura.getCaretPosition();
+					String fraseAntes = taEscritura.getText(0, posicaoCursor);
 					String fraseDepois = taEscritura.getText(posicaoCursor, taEscritura.getLength());
 					taEscritura.setText(fraseAntes);
-		        	taEscritura.appendText(System.getProperty("line.separator"));
-		        	taEscritura.appendText(fraseDepois);
-		        } else {
-		            if(!taEscritura.getText().isEmpty()){
-		                enviaMensagem();
-		                taEscritura.setText("");
-		            }
-		        }
-		    }
+					taEscritura.appendText(System.getProperty("line.separator"));
+					taEscritura.appendText(fraseDepois);
+				} else {
+					if (!taEscritura.getText().isEmpty()) {
+						enviaMensagem();
+						taEscritura.setText("");
+					}
+				}
+			}
 		});
-		
+
 		btEmoji.setOnMouseEntered(event -> {
 			FXMLLoader nodeEmojiLoader;
 			try {
@@ -218,32 +218,38 @@ public class ViewCentralController implements Initializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		});		
+		});
 	}
-	
+
 	public static void criaPopOver(Node nodeInicial, Node conteudoPopOver) {
-		   PopOver popOver = new PopOver(nodeInicial);
-		   popOver.setContentNode(conteudoPopOver);
-		   popOver.setDetachable (false);
-		   popOver.setAutoHide(false);
-		   popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-		   popOver.setAutoFix(false); 
-		   
-		   final Timeline timeline = new Timeline();
-		   timeline.getKeyFrames().add(new KeyFrame(Duration.millis(100)));
-		   timeline.setOnFinished(finishEvent -> {
-		        if (nodeInicial.isHover() || conteudoPopOver.isHover()) timeline.play();
-		        else popOver.hide();
-		   });
-		   nodeInicial.setOnMouseEntered(mouseEvent -> {if (!popOver.isShowing()) popOver.show(nodeInicial);});
-		   nodeInicial.setOnMouseExited(mouseEvent -> timeline.play());
-		}
-	
+		PopOver popOver = new PopOver(nodeInicial);
+		popOver.setContentNode(conteudoPopOver);
+		popOver.setDetachable(false);
+		popOver.setAutoHide(false);
+		popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
+		popOver.setAutoFix(false);
+
+		final Timeline timeline = new Timeline();
+		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(100)));
+		timeline.setOnFinished(finishEvent -> {
+			if (nodeInicial.isHover() || conteudoPopOver.isHover())
+				timeline.play();
+			else
+				popOver.hide();
+		});
+		nodeInicial.setOnMouseEntered(mouseEvent -> {
+			if (!popOver.isShowing())
+				popOver.show(nodeInicial);
+		});
+		nodeInicial.setOnMouseExited(mouseEvent -> timeline.play());
+	}
+
 	public void setaImagemPerfil() {
 		Task<Void> tarefa = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				File ImagePerfil = new File(FileUtils.gravaImagemPerfil(user.getProfileImage(), String.valueOf(user.getId()), FileUtils.getCaminhoImagensPerfil()));
+				File ImagePerfil = new File(FileUtils.gravaImagemPerfil(user.getProfileImage(),
+						String.valueOf(user.getId()), FileUtils.getCaminhoImagensPerfil()));
 				Image profile = new Image(ImagePerfil.toURI().toString());
 				Platform.runLater(() -> {
 					circleImgPerfil.setFill(new ImagePattern(profile));
@@ -255,24 +261,24 @@ public class ViewCentralController implements Initializable {
 		Platform.runLater(() -> {
 			Thread t = new Thread(tarefa);
 			t.start();
-		});	
+		});
 	}
-	
+
 	public void abreConversa() {
 		lbUserChamado.setText(ViewCentralController.userParaConversar.getNomeDeExibicao());
 	}
-	
+
 	public ViewUserChatController buscaUsuarioChat(Usuario usuario) {
-		if(userParaConversar != null) {
+		if (userParaConversar != null) {
 			for (ViewUserChatController viewUserChatController : Colecao.chatsAtivos) {
-				if(usuario.equals(viewUserChatController.usuario)) {
+				if (usuario.equals(viewUserChatController.usuario)) {
 					return viewUserChatController;
 				}
 			}
-		}	
+		}
 		return null;
 	}
-	
+
 	public void atualizaVboxConversa(Mensagem mensagem, Usuario usuario) {
 		ViewUserChatController userChat = buscaUsuarioChat(usuario);
 		Platform.runLater(new Runnable() {
@@ -282,7 +288,7 @@ public class ViewCentralController implements Initializable {
 			}
 		});
 	}
-	
+
 	public void limpaConversaAtual() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -291,24 +297,24 @@ public class ViewCentralController implements Initializable {
 			}
 		});
 	}
-	
+
 	public void colocaBalaoConversa(Mensagem conversa, Baloes opcao) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if(opcao.equals(Baloes.BALAO_INFORMACAO)) {
+				if (opcao.equals(Baloes.BALAO_INFORMACAO)) {
 					vbMensagem.getChildren().add(criaBalaoDeData(conversa));
 				}
-				if(opcao.equals(Baloes.BALAO_DESTINATARIO) || opcao.equals(Baloes.BALAO_REMETENTE)) {
+				if (opcao.equals(Baloes.BALAO_DESTINATARIO) || opcao.equals(Baloes.BALAO_REMETENTE)) {
 					vbMensagem.getChildren().add(criaBalaoDeMensagem(conversa, opcao));
 				}
-				if(opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO) || opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
+				if (opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO) || opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
 					vbMensagem.getChildren().add(criaBalaoDeArquivoMensagem(conversa, opcao));
 				}
 			}
 		});
 	}
-	
+
 	public void carregaVboxUsuariosLogados() throws IOException {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -333,7 +339,7 @@ public class ViewCentralController implements Initializable {
 			}
 		});
 	}
-	
+
 	public void carregaVboxConversas(Vector<Conversa> conversas) throws IOException {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -343,18 +349,18 @@ public class ViewCentralController implements Initializable {
 					try {
 						userChatLoader = new FXMLLoader(getClass().getResource("/gui/views/ViewUserChat.fxml"));
 						Parent userChatParent = (Parent) userChatLoader.load();
-						
+
 						ViewUserChatController controlador = userChatLoader.getController();
 						controlador.setaUsuario(conversa.getParticipante2());
 						controlador.setaMensagem(conversa.getMensagem());
 						controlador.setaConversa(conversa);
-						
-						if(!Colecao.chatsAtivos.contains(controlador)) {
+
+						if (!Colecao.chatsAtivos.contains(controlador)) {
 							Colecao.chatsAtivos.add(controlador);
 							vbConversas.getChildren().add(userChatParent);
-						}
-						else {
-							Colecao.chatsAtivos.get(Colecao.chatsAtivos.indexOf(controlador)).setaMensagem(conversa.getMensagem());
+						} else {
+							Colecao.chatsAtivos.get(Colecao.chatsAtivos.indexOf(controlador))
+									.setaMensagem(conversa.getMensagem());
 							Colecao.chatsAtivos.get(Colecao.chatsAtivos.indexOf(controlador)).setaConversa(conversa);
 						}
 					} catch (IOException e) {
@@ -363,20 +369,21 @@ public class ViewCentralController implements Initializable {
 				}
 				Colecao.associaConversaComChat();
 				ViewUserChatController userChat = buscaUsuarioChat(userParaConversar);
-				if(userChat != null && userParaConversar != null) {
+				if (userChat != null && userParaConversar != null) {
 					conversaAtual = userChat.conversa;
-				}								
+				}
 			}
 		});
 	}
-	
+
 	public HBox criaBalaoDeMensagem(Mensagem conversa, Baloes opcao) {
 		String horarioFormatado = ConversorDataUtils.getTimeToString(conversa.getDateTime());
-		
+
 		if (opcao.equals(Baloes.BALAO_DESTINATARIO)) {
 			FXMLLoader balaoDestinatario;
 			try {
-				balaoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
+				balaoDestinatario = new FXMLLoader(
+						getClass().getResource("/gui/views/ViewBalaoMensagemDestinatario.fxml"));
 				Parent parentBalaoDestinatario = (Parent) balaoDestinatario.load();
 				ViewBalaoMensagemDestinatarioController controlador = balaoDestinatario.getController();
 				controlador.setaMensagem(conversa.getMensagem(), horarioFormatado);
@@ -398,9 +405,9 @@ public class ViewCentralController implements Initializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} 
-		
-		if(opcao.equals(Baloes.BALAO_REMETENTE)) {
+		}
+
+		if (opcao.equals(Baloes.BALAO_REMETENTE)) {
 			FXMLLoader balaoRemetente;
 			try {
 				balaoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoMensagemRemetente.fxml"));
@@ -429,12 +436,13 @@ public class ViewCentralController implements Initializable {
 
 		return null;
 	}
-	
+
 	public HBox criaBalaoDeArquivoMensagem(Mensagem conversa, Baloes opcao) {
 		if (opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
 			FXMLLoader balaoArquivoDestinatario;
 			try {
-				balaoArquivoDestinatario = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoArquivoDestinatario.fxml"));
+				balaoArquivoDestinatario = new FXMLLoader(
+						getClass().getResource("/gui/views/ViewBalaoArquivoDestinatario.fxml"));
 				Parent parentBalaoArquivoDestinatario = (Parent) balaoArquivoDestinatario.load();
 				ViewBalaoArquivoDestinatarioController controlador = balaoArquivoDestinatario.getController();
 				controlador.setaInformacoesIniciais(conversa);
@@ -456,12 +464,13 @@ public class ViewCentralController implements Initializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} 
-		
-		if(opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
+		}
+
+		if (opcao.equals(Baloes.BALAO_ARQUIVO_REMETENTE)) {
 			FXMLLoader balaoArquivoRemetente;
 			try {
-				balaoArquivoRemetente = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoArquivoRemetente.fxml"));
+				balaoArquivoRemetente = new FXMLLoader(
+						getClass().getResource("/gui/views/ViewBalaoArquivoRemetente.fxml"));
 				Parent parentBalaoArquivoRemetente = (Parent) balaoArquivoRemetente.load();
 				ViewBalaoArquivoRemetenteController controlador = balaoArquivoRemetente.getController();
 				controlador.setaInformacoes(conversa);
@@ -487,42 +496,42 @@ public class ViewCentralController implements Initializable {
 
 		return null;
 	}
-	
+
 	public HBox criaBalaoDeData(Mensagem conversa) {
 		String data = ConversorDataUtils.getDateToString(conversa.getDateTime());
-			FXMLLoader balaoData;
-			try {
-				balaoData = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoDataCentral.fxml"));
-				Parent parentBalaoData = (Parent) balaoData.load();
-				ViewBalaoDataCentralController controlador = balaoData.getController();
-				controlador.setaData(data);
+		FXMLLoader balaoData;
+		try {
+			balaoData = new FXMLLoader(getClass().getResource("/gui/views/ViewBalaoDataCentral.fxml"));
+			Parent parentBalaoData = (Parent) balaoData.load();
+			ViewBalaoDataCentralController controlador = balaoData.getController();
+			controlador.setaData(data);
 
-				HBox hboxMensagem = new HBox();
-				hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
-				hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
-				hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
-				hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
-				HBox.setMargin(hboxMensagem, new Insets(0, 10, 0, 0));
-				hboxMensagem.setAlignment(Pos.CENTER);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						hboxMensagem.getChildren().add(parentBalaoData);
-					}
-				});
-				return hboxMensagem;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			HBox hboxMensagem = new HBox();
+			hboxMensagem.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setMaxSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+			hboxMensagem.setMinSize(HBox.USE_COMPUTED_SIZE, HBox.USE_COMPUTED_SIZE);
+			HBox.setMargin(hboxMensagem, new Insets(0, 10, 0, 0));
+			hboxMensagem.setAlignment(Pos.CENTER);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					hboxMensagem.getChildren().add(parentBalaoData);
+				}
+			});
+			return hboxMensagem;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}
-	
+
 	private void requisitaConversas() {
 		Vector<Object> requisicao = new Vector<>();
 		requisicao.add("conversas");
 		requisicao.add(user);
-		
+
 		try {
 			ConnectionUtils.saida.writeObject(requisicao);
 			ConnectionUtils.saida.reset();
@@ -530,50 +539,53 @@ public class ViewCentralController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// #################Ações de Componentes################# //
-	
-	public void selecionaArquivo(){
+
+	public void selecionaArquivo() {
 		arquivoParaEnvio = FileUtils.mostraSeletorArquivos(Main.primaryStage);
 		String textoDaMensagem = "";
 		LocalDateTime horario = LocalDateTime.now();
-		if(getArquivoParaEnvio() != null) {
+		if (getArquivoParaEnvio() != null) {
 			AlertUtils chamador = new AlertUtils();
-			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(getArquivoParaEnvio(), horario);	
+			textoDaMensagem = chamador.showJanelaConfirmacaoEnvio(getArquivoParaEnvio(), horario);
 		}
-		
-		if(getArquivoParaEnvio() != null) {
+
+		if (getArquivoParaEnvio() != null) {
 			try {
-				
+
 				Vector<Object> requisicao = new Vector<>();
-				Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario, new Arquivo(FileUtils.fileToBytes(getArquivoParaEnvio()), getArquivoParaEnvio()));
-				
-				requisicao.add("mensagemComArquivo");	
+				Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user,
+						ViewCentralController.getUserParaConversar(), horario,
+						new Arquivo(FileUtils.fileToBytes(getArquivoParaEnvio()), getArquivoParaEnvio()));
+
+				requisicao.add("mensagemComArquivo");
 				requisicao.add(mensagemParaEnvio);
 				requisicao.add(conversaAtual);
-				
+
 				ConnectionUtils.saida.writeObject(requisicao);
 				ConnectionUtils.saida.reset();
-				
+
 				colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_ARQUIVO_REMETENTE);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}	
+			}
 		}
 	}
-	
+
 	public void enviaMensagem() {
-		if(!taEscritura.getText().isEmpty()) {
+		if (!taEscritura.getText().isEmpty()) {
 			LocalDateTime horario = LocalDateTime.now();
 			String textoDaMensagem = taEscritura.getText();
 			Vector<Object> requisicao = new Vector<>();
-			
-			Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user, ViewCentralController.getUserParaConversar(), horario);	
-			
-			requisicao.add("mensagem");	
+
+			Mensagem mensagemParaEnvio = new Mensagem(textoDaMensagem, user,
+					ViewCentralController.getUserParaConversar(), horario);
+
+			requisicao.add("mensagem");
 			requisicao.add(mensagemParaEnvio);
 			requisicao.add(conversaAtual);
-			
+
 			colocaBalaoConversa(mensagemParaEnvio, Baloes.BALAO_REMETENTE);
 
 			try {
@@ -582,10 +594,9 @@ public class ViewCentralController implements Initializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(conversaAtual == null) {
+			if (conversaAtual == null) {
 				requisitaConversas();
-			}
-			else {
+			} else {
 				atualizaVboxConversa(mensagemParaEnvio, mensagemParaEnvio.getDestinatario());
 			}
 			taEscritura.setText("");
@@ -595,61 +606,54 @@ public class ViewCentralController implements Initializable {
 	public void recebeMensagem(Vector<?> requisicao, Baloes opcao) throws IOException {
 		Mensagem mensagemRecebida = (Mensagem) requisicao.get(1);
 		requisitaConversas();
-		if(mensagemRecebida.getRemetente().equals(userParaConversar)) {
-			if(opcao.equals(Baloes.BALAO_DESTINATARIO)) {
+		if (mensagemRecebida.getRemetente().equals(userParaConversar)) {
+			if (opcao.equals(Baloes.BALAO_DESTINATARIO)) {
 				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_DESTINATARIO);
 			}
-			if(opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
-//				String caminho = FileUtils.getCaminhoArquivos()+File.separatorChar+String.valueOf(mensagemRecebida.getRemetente().getId());
-//				caminho = FileUtils.gravaArquivo(mensagemRecebida.getArquivo(), caminho);
-				
+			if (opcao.equals(Baloes.BALAO_ARQUIVO_DESTINATARIO)) {
 				colocaBalaoConversa(mensagemRecebida, Baloes.BALAO_ARQUIVO_DESTINATARIO);
-			}	
-		}
-		else {
+			}
+		} else {
 			AlertUtils.showNotificacaoNovaMensagem(mensagemRecebida);
-		}	
-		
+		}
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void recebeHistoricoMensagem(Vector<?> requisicao) {
 		limpaConversaAtual();
-		Vector<Mensagem>  historicoMensagens = (Vector<Mensagem>)requisicao.get(1);
-		
-		if(!historicoMensagens.isEmpty()) {
+		Vector<Mensagem> historicoMensagens = (Vector<Mensagem>) requisicao.get(1);
+
+		if (!historicoMensagens.isEmpty()) {
 			LocalDateTime dataTeporaria = historicoMensagens.firstElement().getDateTime();
 			colocaBalaoConversa(historicoMensagens.firstElement(), Baloes.BALAO_INFORMACAO);
-			
+
 			for (Mensagem mensagemHistorico : historicoMensagens) {
-				if(mensagemHistorico.getDateTime().toLocalDate().isAfter(dataTeporaria.toLocalDate())) {
+				if (mensagemHistorico.getDateTime().toLocalDate().isAfter(dataTeporaria.toLocalDate())) {
 					dataTeporaria = mensagemHistorico.getDateTime();
 					colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_INFORMACAO);
 				}
-				if(mensagemHistorico.getArquivo() == null) {
-					if(mensagemHistorico.getRemetente().equals(user)) {
+				if (mensagemHistorico.getArquivo() == null) {
+					if (mensagemHistorico.getRemetente().equals(user)) {
 						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_REMETENTE);
-					}
-					else {
+					} else {
 						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_DESTINATARIO);
 					}
-				}
-				else {
-					if(mensagemHistorico.getRemetente().equals(user)) {
+				} else {
+					if (mensagemHistorico.getRemetente().equals(user)) {
 						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_ARQUIVO_REMETENTE);
-					}
-					else {
+					} else {
 						colocaBalaoConversa(mensagemHistorico, Baloes.BALAO_ARQUIVO_DESTINATARIO);
 					}
-				}	
-			}	
+				}
+			}
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void recebeConversas(Vector<?> requisicao) throws IOException {
-		Vector<Conversa> conversas = (Vector<Conversa>)requisicao.get(1);
+		Vector<Conversa> conversas = (Vector<Conversa>) requisicao.get(1);
 		carregaVboxConversas(conversas);
 	}
 
@@ -666,19 +670,17 @@ public class ViewCentralController implements Initializable {
 			AlertUtils.showNotificacaoLogin(true, Colecao.usuariosAtivos.lastElement().getUsuario());
 		}
 	}
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lbUser.setText(user.getNomeDeExibicao());
-		
+
 		associaComponentesStaticos();
 		setaImagemPerfil();
 		requisitaConversas();
 		setAcaoComponentes();
-		
+
 		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());
-		//popEmoji.onShowingProperty().bind(btEmoji.getOnMouseDragEntered());
-		//popEmoji.autoHideProperty().bind(btEmoji.hoverProperty());
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
