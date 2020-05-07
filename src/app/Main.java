@@ -57,21 +57,7 @@ public class Main extends Application {
                         protected Boolean call() throws Exception {
                         	conexao = new ConnectionUtils("10.0.10.100", 12345);
                         	ConnectionUtils.saida = new ObjectOutputStream(Main.conexao.getConnection().getOutputStream());
-                        	ConnectionUtils.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());
-                           /* Socket cliente = new Socket("127.0.0.1", 12345);
-                            System.out.println("O cliente se conectou ao servidor!");
-
-                            Scanner teclado = new Scanner(System.in);
-                            PrintStream saida = new PrintStream(cliente.getOutputStream(), true, "UTF-8");
-
-                            while (teclado.hasNextLine()) {
-                                saida.println(teclado.nextLine());
-                            }
-
-                            saida.close();
-                            teclado.close();
-                            cliente.close();*/
-    
+                        	ConnectionUtils.entrada = new ObjectInputStream(Main.conexao.getConnection().getInputStream());                          
                             return true;
                         }
                     };

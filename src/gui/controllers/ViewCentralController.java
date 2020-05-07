@@ -11,9 +11,13 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import org.controlsfx.control.PopOver;
+
 import com.jfoenix.controls.JFXButton;
 
 import app.Main;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -21,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -38,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import model.entities.Arquivo;
 import model.entities.Colecao;
 import model.entities.Conversa;
@@ -60,6 +66,7 @@ public class ViewCentralController implements Initializable {
 	public static Pane paneOpacoStatic;
 	public static TabPane tabPaneConversasStatic;
 	public static Circle circleImgCoversaStatic;
+	public static TextArea taEscrituraStatic;
 	
 	@FXML
     private AnchorPane apCentral2;
@@ -176,6 +183,7 @@ public class ViewCentralController implements Initializable {
 		ViewCentralController.paneOpacoStatic = paneOpaco;
 		ViewCentralController.tabPaneConversasStatic = tabPaneConversas;
 		ViewCentralController.circleImgCoversaStatic = circleImgCoversa;
+		ViewCentralController.taEscrituraStatic = taEscritura;
 		
 	}
 	
@@ -185,8 +193,13 @@ public class ViewCentralController implements Initializable {
 		taEscritura.setOnKeyPressed(event -> {
 		    if (event.getCode() == KeyCode.ENTER) {
 		        event.consume();//Evita que ele mande o enter no textArea
-		        if (event.isShiftDown()) {
+		        if (event.isShiftDown()) {//Vai quebrar a linha onde for indicado
+		        	int posicaoCursor = taEscritura.getCaretPosition();
+		        	String fraseAntes = taEscritura.getText(0, posicaoCursor);
+					String fraseDepois = taEscritura.getText(posicaoCursor, taEscritura.getLength());
+					taEscritura.setText(fraseAntes);
 		        	taEscritura.appendText(System.getProperty("line.separator"));
+		        	taEscritura.appendText(fraseDepois);
 		        } else {
 		            if(!taEscritura.getText().isEmpty()){
 		                enviaMensagem();
@@ -195,7 +208,36 @@ public class ViewCentralController implements Initializable {
 		        }
 		    }
 		});
+		
+		btEmoji.setOnMouseEntered(event -> {
+			FXMLLoader nodeEmojiLoader;
+			try {
+				nodeEmojiLoader = new FXMLLoader(getClass().getResource("/gui/views/ViewNodeEmoji.fxml"));
+				Parent nodeEmojiParent = (Parent) nodeEmojiLoader.load();
+				criaPopOver(btEmoji, nodeEmojiParent);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});		
 	}
+	
+	public static void criaPopOver(Node nodeInicial, Node conteudoPopOver) {
+		   PopOver popOver = new PopOver(nodeInicial);
+		   popOver.setContentNode(conteudoPopOver);
+		   popOver.setDetachable (false);
+		   popOver.setAutoHide(false);
+		   popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_RIGHT);
+		   popOver.setAutoFix(false); 
+		   
+		   final Timeline timeline = new Timeline();
+		   timeline.getKeyFrames().add(new KeyFrame(Duration.millis(100)));
+		   timeline.setOnFinished(finishEvent -> {
+		        if (nodeInicial.isHover() || conteudoPopOver.isHover()) timeline.play();
+		        else popOver.hide();
+		   });
+		   nodeInicial.setOnMouseEntered(mouseEvent -> {if (!popOver.isShowing()) popOver.show(nodeInicial);});
+		   nodeInicial.setOnMouseExited(mouseEvent -> timeline.play());
+		}
 	
 	public void setaImagemPerfil() {
 		Task<Void> tarefa = new Task<Void>() {
@@ -490,7 +532,7 @@ public class ViewCentralController implements Initializable {
 	}
 	
 	// #################Ações de Componentes################# //
-
+	
 	public void selecionaArquivo(){
 		arquivoParaEnvio = FileUtils.mostraSeletorArquivos(Main.primaryStage);
 		String textoDaMensagem = "";
@@ -625,12 +667,6 @@ public class ViewCentralController implements Initializable {
 		}
 	}
 	
-	private void recebeArquivo(Vector<?> requisicao) throws IOException {
-		Mensagem mensagemComArquivo = (Mensagem) requisicao.get(1);
-		String destino = FileUtils.gravaArquivo(mensagemComArquivo.getArquivo(), FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(userParaConversar.getId()));
-		FileUtils.escreveListaArquivos(new File(FileUtils.getCaminhoArquivos()+File.separator+String.valueOf(ViewCentralController.getUserParaConversar().getId()+".txt")), "remetente;"+mensagemComArquivo.getArquivo().getLocalizacaoServidor().getName()+";"+destino+";");
-	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lbUser.setText(user.getNomeDeExibicao());
@@ -641,6 +677,8 @@ public class ViewCentralController implements Initializable {
 		setAcaoComponentes();
 		
 		scrollPaneMensagens.vvalueProperty().bind(vbMensagem.heightProperty());
+		//popEmoji.onShowingProperty().bind(btEmoji.getOnMouseDragEntered());
+		//popEmoji.autoHideProperty().bind(btEmoji.hoverProperty());
 
 		ServerHandler sHandler = new ServerHandler(Main.conexao.getConnection(), ConnectionUtils.entrada);
 		Thread t = new Thread(sHandler);
@@ -692,9 +730,6 @@ public class ViewCentralController implements Initializable {
 						case "conversas":
 							recebeConversas(requisicao);
 							break;
-//						case "arquivo":
-//							recebeArquivo(requisicao);
-//							break;
 						default:
 							Colecao.filaRequisicoes.add(requisicao);
 							break;
