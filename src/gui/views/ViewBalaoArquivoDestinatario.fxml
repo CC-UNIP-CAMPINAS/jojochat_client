@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Polyline?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="apCentral" stylesheets="@css/viewBalaoArquivo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewBalaoArquivoDestinatarioController">
+   <children>
+      <Polyline fx:id="triBalao1" fill="#e0e0e0" layoutX="34.0" layoutY="40.0" points="0.0, -40.0, -30.0, -40.0, 0.0, -12.0, 0.0, -40.0" stroke="#e0e0e0" strokeType="INSIDE" />
+      <AnchorPane fx:id="apInterno" layoutX="23.0" style="-fx-background-color: #e0e0e0; -fx-background-radius: 1em;">
+         <children>
+            <AnchorPane fx:id="apArquivo" onMouseClicked="#abreArquivo" opacity="0.16" prefHeight="70.0" prefWidth="200.0" style="-fx-background-radius: 1em;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label fx:id="lbTamanhoArquivo" layoutX="80.0" layoutY="29.0" prefHeight="16.0" prefWidth="206.0" text="262.2 kB" textFill="#686666" visible="false">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="58.0" fitWidth="65.0" layoutX="15.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../model/img/icons8-file-100.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lbNomeArquivo" layoutX="80.0" layoutY="14.0" prefHeight="16.0" prefWidth="206.0" text="Arquivo.txt" textFill="#292e37">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbMensagem" layoutX="16.0" layoutY="81.0" maxWidth="291.0" textFill="#393737" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label fx:id="lbHorario" layoutX="270.0" layoutY="1337.0" prefHeight="14.0" prefWidth="32.0" text="21:49" textFill="#727272" AnchorPane.bottomAnchor="-12.0" AnchorPane.rightAnchor="2.0">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <JFXSpinner fx:id="spinCarregando" layoutX="249.0" layoutY="32.0" prefHeight="38.0" prefWidth="32.0" visible="false" />
+            <JFXButton fx:id="btDownload" layoutX="246.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#fazDownload" prefHeight="38.0" prefWidth="40.0" text=" " visible="false">
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="27.0" onMouseClicked="#fazDownload" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../model/img/icons8-download-100.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="4.0" right="1.0" />
+               </padding>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="5.0" right="10.0" top="5.0" />
+         </padding>
+      </AnchorPane>
+   </children>
+</AnchorPane>

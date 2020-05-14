@@ -1,0 +1,22 @@
+#apCentral{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+
+#apInterno{
+	-fx-background-color: #accbe8;
+	-fx-background-radius: 1em;
+}
+
+#apArquivo{
+	-fx-background-color: black;
+}
+
+#apArquivo:hover{
+	-fx-background-color: #878787;
+}
+
+#btDownload{
+	-fx-background-radius: 8em;
+	-fx-border-radius: 8em;
+}

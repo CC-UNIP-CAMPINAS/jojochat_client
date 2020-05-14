@@ -6,10 +6,10 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" onMouseEntered="#selecionado" onMouseExited="#deSeleciona" prefHeight="62.0" prefWidth="315.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
+<AnchorPane fx:id="apUserChat" onMouseClicked="#clicado" prefHeight="90.0" prefWidth="315.0" stylesheets="@css/viewUserChat.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ViewUserChatController">
    <children>
-      <Circle fill="DODGERBLUE" layoutX="31.0" layoutY="31.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="lbUser" layoutX="70.0" layoutY="7.0" prefHeight="27.0" prefWidth="214.0">
+      <Circle fx:id="circuloImagemPerfil" fill="DODGERBLUE" layoutX="45.0" layoutY="44.0" radius="35.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="lbUser" layoutX="85.0" layoutY="10.0" prefHeight="27.0" prefWidth="214.0">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -19,8 +19,8 @@
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Label>
-      <Line endX="-29.0" fill="#a5c3df" layoutX="147.0" layoutY="61.0" startX="-136.5" stroke="#a5c3df" AnchorPane.leftAnchor="10.0" />
-      <Label fx:id="lbMensagem" layoutX="71.0" layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="27.0" prefWidth="187.0">
+      <Line endX="-29.0" fill="#a5c3df" layoutX="147.0" layoutY="89.0" startX="-136.5" stroke="#a5c3df" AnchorPane.leftAnchor="10.0" />
+      <Label fx:id="lbMensagem" layoutX="89.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="27.0" prefWidth="187.0">
          <font>
             <Font size="14.0" />
          </font>

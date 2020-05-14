@@ -10,12 +10,14 @@ public class Usuario implements Serializable{
 	
 	private String nomeDeExibicao;
 	private String usuario;
+	private byte[] profileImage;
 	private int id;
 	
-	public Usuario(int id, String nomeDeExibicao, String usuario) {
+	public Usuario(int id, String nomeDeExibicao, String usuario, byte[] profileImage) {
 		this.nomeDeExibicao = nomeDeExibicao;
 		this.usuario = usuario;
 		this.id = id;
+		this.setProfileImage(profileImage);
 	}
 	
 	public String getUsuario() {
@@ -40,6 +42,14 @@ public class Usuario implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public byte[] getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(byte[] profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	@Override

@@ -8,18 +8,50 @@
     -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
 
-#btLogin{
-    -fx-background-color: #accbe8;
+#btSelecionaImagem, #btCancelar, #btCadastro, #btCadastrar, #btLogin{
 	-fx-background-radius: 5em;
+	-fx-text-fill: white;
 	-fx-border-radius: 5em;
     -fx-border-color:  #e1e1e1;
     -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
 
-#tfLogin, #pfSenha{
+#btLogin{
+    -fx-background-color: #accbe8;
+}
+
+#btCadastro{
+	-fx-background-color: #FFCA4A;
+}
+
+#btCadastrar{
+	-fx-background-color: #accbe8;
+}
+
+#btSelecionaImagem{
+	-fx-background-color: #accbe8;
+}
+
+#btCancelar{
+	-fx-background-color: #FF5555;
+}
+
+#btMostraSenhaCadastro, #btMostraSenha{
+	-fx-border-radius: 8em;
+	-fx-background-radius: 8em;
+}
+
+#tfLogin, #pfSenha, #pfSenhaCadastro, #tfLoginCadastro, #tfNomeUsuario, #tfSenhaVisivel, #tfSenhaVisivelCadastro{
     -fx-text-fill: #292e37;
-    -fx-text-size: 20px;
+    -fx-font-size: 20px;
     -fx-background-color: white;
+    -fx-background-radius: 5em;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#tfNomeArquivo{
+	-fx-text-fill: #292e37;
+    -fx-background-color: #D7D7D7;
     -fx-background-radius: 5em;
     -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
