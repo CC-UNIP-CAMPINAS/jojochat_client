@@ -5,7 +5,7 @@
 ----
 
 ## Descrição
-> Software escrito em Java para conversão através de Berkeley sockets (PROJETO 5º SEMESTRE UNIP).
+> Software escrito em Java para bate-papo através de Berkeley sockets (PROJETO 5º SEMESTRE UNIP).
 
 ---
 
@@ -19,7 +19,6 @@
 
 ## Dependências
 
- - [mariadb-connector-j](https://github.com/mariadb-corporation/mariadb-connector-j) >= v4.2
  - [controlsfx](https://github.com/controlsfx/controlsfx) = v8.40.16
  - [JFoenix](https://github.com/jfoenixadmin/JFoenix) = v8.0.8
  - [JavaFX SDK](https://gluonhq.com/products/javafx/) = v8
@@ -64,7 +63,7 @@
 [![conversa.gif](https://s7.gifyu.com/images/conversa.gif)](https://gifyu.com/image/ngd0)
 
 <b>Recebimento de arquivos:</b>
-[![Peek-2020-05-21-15-29-min.gif](https://s7.gifyu.com/images/Peek-2020-05-21-15-29-min.gif)](https://gifyu.com/image/ngng)
+[![recebendo-arquivos.gif](https://s7.gifyu.com/images/recebendo-arquivos.gif)](https://gifyu.com/image/ngWa)
 
 <b>Envio de arquivos:</b>
 [![Peek-2020-05-21-15-31.gif](https://s7.gifyu.com/images/Peek-2020-05-21-15-31.gif)](https://gifyu.com/image/ngn7)
@@ -76,18 +75,21 @@
 
 <center><b>-=Leonardo Petta do Nascimento=-</b></center></br> 
 
-Site: [Meu Protfólio](https://leonardopn.github.io/)</br>
+Site: [Meu Portfólio](https://leonardopn.github.io/)</br>
 Facebook: [@leonardo.petta.nascimento](https://www.facebook.com/leonardo.petta.nascimento)
 Email: leonardocps9@protonmail.com
 Linkedin: [Leonardo Petta Do Nascimento](https://www.linkedin.com/in/leonardo-petta-do-nascimento-75674015b/)
 
+<center><b>-=Lucas Limas=-</b></center></br> 
+
+Facebook: [llimasf](https://www.facebook.com/llimasf)
+Email: llimas.f@gmail.com
 ---
 
 ## Agradecimentos
 
-1. [Maria DB Foundation;](https://mariadb.org/)
-2. [FX Features;](http://fxexperience.com/)
-3. [JFoenix;](http://www.jfoenix.com/)
-4. [Java FX;](https://openjfx.io/)
-5. [UNIP](https://unip.br/)
+1. [FX Features;](http://fxexperience.com/)
+2. [JFoenix;](http://www.jfoenix.com/)
+3. [Java FX;](https://openjfx.io/)
+4. [UNIP](https://unip.br/)
 ---
